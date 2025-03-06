@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>ログイン画面</title>
+	<meta charset="UTF-8">
+	<title>ログイン画面</title>
 </head>
+
 <body>
-	ログイン画面
+	<h2>ログイン画面</h2>
+	<!-- thymeleafを使ってデータを送信-->
+	<form th:action="@{/login}" method="post" th:object="${loginForm}">
+		<!-- th:fieldにformの各フィールド名と一致すべき  -->
+		<div>
+			<label>ID:</label><input type="text" th:field="*{loginId}" />
+		</div>
+		<div>
+			<label>PW:</label><input type="text" th:field="*{password}" />
+		</div>
+		<div>
+			<input type="submit" value="ログイン" />
+		</div>
+	</form>
 </body>
+
 </html>
