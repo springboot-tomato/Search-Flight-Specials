@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Flight Search</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script th:inline="javascript">
 	var key = [[${key}]];
 	var secret = [[${secret}]];
@@ -28,16 +31,21 @@
 </script>
 </head>
 <body>
-	<h1>Search Flights</h1>
+	<h2>格安航空券を簡単に比較＆予約</h2>
 	<form id="flight-search-form">
-		<label for="origin">Origin:</label> 
+		<input type="radio" id="oneWayTicket" name="ticketOption" value="1" checked>片道
+		<input type="radio" id="roundTicket" name="ticketOption" value="2">往復
+		<br>
+		<label for="origin">出発:</label> 
 		<input type="text" id="origin" name="origin" required>
+		<div id="originSearchResults"></div>
 		<br>
-		<label for="destination">Destination:</label>
+		<label for="destination">到着:</label>
 		<input type="text" id="destination" name="destination" required>
+		<div id="destinationSearchResults"></div>
 		<br>
-		<label for="departureDate">Departure Date:</label>
-		<input type="date" id="departureDate" name="departureDate" required>
+		<input type="text" id="departureDate" name="departureDate" required>
+		<input type="text" id="arrivalDate" name="arrivalDate">
 		<br>
 		<button type="submit">Search</button>
 	</form>
@@ -45,15 +53,25 @@
 	<div id="results"></div>
 </body>
 <script>
+
+const originInput = document.getElementById('origin');
+const destinationInput = document.getElementById('destination');
+const departureDateInput = document.getElementById('departureDate');
+const originSearchResults = document.getElementById('originSearchResults');
+const destinationSearchResults = document.getElementById('destinationSearchResults');
+
 document.getElementById('flight-search-form').addEventListener('submit', async (e) => {
 	e.preventDefault();
 	
-	const origin = document.getElementById('origin').value;
-	const destination = document.getElementById('destination').value;
-	const departureDate = document.getElementById('departureDate').value;
-
+	const origin = originInput.value;
+	const destination = destinationInput.value;
+	const departureDate = departureDateInput.value;
+	
+	const newDate = departureDate.replace(/\//g, '-');
+	console.log(newDate);
+	
 	try {
-		fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&currencyCode=USD&adults=1&travelClass=BUSINESS&max=10`, 
+		fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${newDate}&currencyCode=USD&adults=1&travelClass=BUSINESS&max=10`, 
 		{
 			headers: {
 			Authorization: `Bearer ${token}`
@@ -67,5 +85,37 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 		console.error('Error:', error);
 	}
 });
+
+originInput.addEventListener('input', async function() {
+	const originValue = originInput.value;
+	try{console.log("後でｃｓｖから取得し、データを取得")}
+	finally{}
+})
+
+destinationInput.addEventListener('input', async function() {
+	const destinationValue = destinationInput.value;
+	try{console.log("後でｃｓｖから取得し、データを取得")}
+	finally{}
+})
+
+$(function() {
+	var dateFormat = "yy/mm/dd";
+	var from = $("#departureDate").datepicker({
+		dateFormat: dateFormat,
+		minDate: 0,
+		changeMonth: true,
+		onClose: function(selectedDate) {
+			$("#arrivalDate").datepicker("option", "minDate", selectedDate);
+		}
+	});
+	var to = $("#arrivalDate").datepicker({
+	dateFormat: dateFormat,
+	changeMonth: true,
+	onClose: function(selectedDate) {
+		$("#departureDate").datepicker("option", "maxDate", selectedDate);
+	}
+	});
+});
+
 </script>
 </html>
