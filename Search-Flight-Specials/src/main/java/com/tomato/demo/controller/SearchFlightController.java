@@ -31,8 +31,6 @@ public class SearchFlightController {
 			String json = objectMapper.writeValueAsString(results);
 
 			SearchFlightRepository flightOffers = searchFlightService.parseFlightOffers(json);
-			
-			//データ処理を入れる
 
 			return ResponseEntity.ok(flightOffers);
 		} catch (IOException e) {

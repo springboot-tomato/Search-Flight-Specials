@@ -13,147 +13,148 @@ import lombok.Getter;
 
 @Data
 public class SearchFlightRepository {
-	private Meta meta;
+	public Meta meta;
 	@JsonProperty("data")
-    private List<FlightOffer> FlightOffers;
+	public List<FlightOffer> FlightOffers;
 	@JsonProperty("dictionaries")
-	private Map<String, Location> dictionaries;
-}
+	public Map<String, Location> dictionaries;
 
-@Getter
-class Meta {
-    private int count;
-    private Links links;
-}
+	@Getter
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class FlightOffer {
+		public String type;
+		public int id;
+		public String source;
+		public boolean instantTicketingRequired;
+		public boolean nonHomogeneous;
+		public boolean oneWay;
+		public String lastTicketingDate;
+		public String lastTicketingDateTime;
+		public int numberOfBookableSeats;
+		public List<Itinerary> itineraries;
+		public Price price;
+		public PricingOptions pricingOptions;
+		public List<String> validatingAirlineCodes;
+		public List<TravelerPricing> travelerPricings;
+	}
 
-@Getter
-class Links {
-    private String self;
-}
+	@Getter
+	public static class Meta {
+		public int count;
+		public Links links;
+	}
 
-@Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
-class FlightOffer {
-    private String type;
-    private int id;
-    private String source;
-    private boolean instantTicketingRequired;
-    private boolean nonHomogeneous;
-    private boolean oneWay;
-    private String lastTicketingDate;
-    private String lastTicketingDateTime;
-    private int numberOfBookableSeats;
-    private List<Itinerary> itineraries;
-    private Price price;
-    private PricingOptions pricingOptions;
-    private List<String> validatingAirlineCodes;
-    private List<TravelerPricing> travelerPricings;
-}
+	@Getter
+	public static class Links {
+		public String self;
+	}
 
-@Getter
-class Itinerary {
-    private String duration;
-    private List<Segment> segments;
-}
+	@Getter
+	public static class Itinerary {
+		public String duration;
+		public List<Segment> segments;
+	}
 
-@Getter
-class Segment {
-	private Departure departure;
-    private Arrival arrival;
-    private String carrierCode;
-    private String number;
-    private Aircraft aircraft;
-    private Operating operating;
-    private String duration;
-    private int id;
-    private int numberOfStops;
-    private boolean blacklistedInEU;
-}
+	@Getter
+	public static class Segment {
+		public Departure departure;
+		public Arrival arrival;
+		public String carrierCode;
+		public String number;
+		public Aircraft aircraft;
+		public Operating operating;
+		public String duration;
+		public int id;
+		public int numberOfStops;
+		public boolean blacklistedInEU;
+	}
 
-@Getter
-class Departure {
-    private String iataCode;
-    private String terminal;
-    private String at;
-}
+	@Getter
+	public static class Departure {
+		public String iataCode;
+		public String terminal;
+		public String at;
+	}
 
-@Getter
-class Arrival {
-    private String iataCode;
-    private String terminal;
-    private String at;
-}
+	@Getter
+	public static class Arrival {
+		public String iataCode;
+		public String terminal;
+		public String at;
+	}
 
-@Getter
-class Aircraft {
-    private String code;
-}
+	@Getter
+	public static class Aircraft {
+		public String code;
+	}
 
-@Getter
-class Operating {
-    private String carrierCode;
-}
+	@Getter
+	public static class Operating {
+		public String carrierCode;
+	}
 
-@Getter
-class Price {
-    private String currency;
-    private double total;
-    private double base;
-    private List<Fee> fees;
-    private double grandTotal;
-}
+	@Getter
+	public static class Price {
+		public String currency;
+		public double total;
+		public double base;
+		public List<Fee> fees;
+		public double grandTotal;
+	}
 
-@Getter
-class Fee {
-    private double amount;
-    private String type;
-}
+	@Getter
+	public static class Fee {
+		public double amount;
+		public String type;
+	}
 
-@Getter
-class PricingOptions {
-    private List<String> fareType;
-    private boolean includedCheckedBagsOnly;
-}
+	@Getter
+	public static class PricingOptions {
+		public List<String> fareType;
+		public boolean includedCheckedBagsOnly;
+	}
 
-@Getter
-class TravelerPricing {
-    private int travelerId;
-    private String fareOption;
-    private String travelerType;
-    private Price price;
-    private List<FareDetailsBySegment> fareDetailsBySegment;
-}
+	@Getter
+	public static class TravelerPricing {
+		public int travelerId;
+		public String fareOption;
+		public String travelerType;
+		public Price price;
+		public List<FareDetailsBySegment> fareDetailsBySegment;
+	}
 
-@Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
-class FareDetailsBySegment {
-    private int segmentId;
-    private String cabin;
-    private String fareBasis;
-    private String classType;
-    private IncludedCheckedBags includedCheckedBags;
-    private IncludedCabinBags includedCabinBags;
-}
+	@Getter
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class FareDetailsBySegment {
+		public int segmentId;
+		public String cabin;
+		public String fareBasis;
+		public String classType;
+		public IncludedCheckedBags includedCheckedBags;
+		public IncludedCabinBags includedCabinBags;
+	}
 
-@Getter
-class IncludedCheckedBags {
-    private int quantity;
-    private double weight;
-    private String weightUnit;
-}
+	@Getter
+	public static class IncludedCheckedBags {
+		public int quantity;
+		public double weight;
+		public String weightUnit;
+	}
 
-@Getter
-class IncludedCabinBags {
-    private int quantity;
-    private double weight;
-    private String weightUnit;
-}
+	@Getter
+	public static class IncludedCabinBags {
+		public int quantity;
+		public double weight;
+		public String weightUnit;
+	}
 
-@Data
-class Location {
-    private String cityCode;
-    private String countryCode;
-    
-    @JsonAnySetter
-    private Map<String, Object> additionalProperties = new HashMap<>();
+	@Data
+	public static class Location {
+		public String cityCode;
+		public String countryCode;
+
+		@JsonAnySetter
+		public Map<String, Object> additionalProperties = new HashMap<>();
+	}
+
 }

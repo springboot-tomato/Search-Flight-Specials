@@ -8,7 +8,7 @@ fetch('/api/get-amadeusKey')
 		fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
 			body: `grant_type=client_credentials&client_id=${key}&client_secret=${secret}`,
 			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
+				"Content-Type": "application/x-www-form-urlencoded",
 			},
 			method: "POST"
 		}
