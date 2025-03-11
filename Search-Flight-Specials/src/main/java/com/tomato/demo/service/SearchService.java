@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tomato.demo.IATAsearch;
 import com.tomato.demo.dao.CSVDataReaderDao;
 import com.tomato.demo.dao.CSVDataWriterDao;
+import com.tomato.demo.model.IATAsearch;
 import com.tomato.demo.util.SearchDataFilter;
 
 @Service

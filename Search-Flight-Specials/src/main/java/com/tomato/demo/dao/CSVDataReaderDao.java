@@ -7,8 +7,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.tomato.demo.IATAsearch;
-import com.tomato.demo.model.Search;
+import com.tomato.demo.model.IATAsearch;
 
 @Repository
 public class CSVDataReaderDao {
@@ -34,7 +33,7 @@ public class CSVDataReaderDao {
 				String countryNmKr = data[6];
 				String cityNmEng = data[7];
 			
-				Search s = new Search();
+				IATAsearch s = new IATAsearch();
 				
 				s.setCountryNmEng(countryNmEng);
 				s.setCountryNmKr(countryNmKr);

@@ -3,7 +3,7 @@ package com.tomato.demo.model;
 import lombok.Data;
 
 @Data
-public class Search {
+public class IATAsearch {
 
 	private String airportNmEng;
 	private String airportNmKr;
