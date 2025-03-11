@@ -37,11 +37,11 @@ public class SearchFlightService {
                 		String carrierCode = segment.getCarrierCode();
                 		String carrier = (String)repo.getDictionaries().get("carriers").getAdditionalProperties().get(carrierCode);
                 		//出発空港
-                		String departureTerminal = segment.getDeparture().getTerminal();
+                		String departureTerminal = segment.getDeparture().getIataCode();
                 		//出発時間
                 		String departureTime = segment.getDeparture().getAt().split("T")[1];
                 		//到着空港
-                		String arrivalTerminal = segment.getArrival().getTerminal();
+                		String arrivalTerminal = segment.getArrival().getIataCode();
                 		//到着時間
                 		String arrivalTime = segment.getArrival().getAt().split("T")[1];
                 		//金額

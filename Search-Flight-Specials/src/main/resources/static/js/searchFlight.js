@@ -5,6 +5,7 @@ const departureDateInput = document.getElementById('departureDate');
 const arrivalDateInput = document.getElementById('arrivalDate');
 const originSearchResults = document.getElementById('originSearchResults');
 const destinationSearchResults = document.getElementById('destinationSearchResults');
+const resultTable = document.getElementById('resultTable');
 
 document.getElementById('flight-search-form').addEventListener('submit', async (e) => {
 	e.preventDefault();
@@ -18,7 +19,7 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 
 	const newDepartureDate = departureDate.replace(/\//g, '-');
 	const newArrivalDate = arrivalDate.replace(/\//g, '-');
-	
+
 	const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
 
 	var fetchUrl = '';
@@ -50,7 +51,19 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 				})
 					.then(resp => resp.json())
 					.then(data => {
-						console.log("SpringにResponseされた後:", data);
+						resultTable.style.display = '';
+						let tableBody = "";
+						$.each(data.flightDetails, function(index, flight) {
+							tableBody += "<tr>";
+							tableBody += "<td>" + flight.carrier + "</td>";
+							tableBody += "<td>" + flight.departureTime + "</td>";
+							tableBody += "<td>" + flight.departureTerminal + "</td>";
+							tableBody += "<td>" + flight.arrivalTime + "</td>";
+							tableBody += "<td>" + flight.arrivalTerminal + "</td>";
+							tableBody += "<td>" + flight.fee + "</td>";
+							tableBody += "</tr>";
+						})
+						$("#resultTable").append(tableBody);
 					})
 					.catch(error => {
 						console.error("Error sending data to Spring:", error);

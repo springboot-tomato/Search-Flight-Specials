@@ -4,32 +4,47 @@
 <meta charset="UTF-8">
 <title>Flight Search</title>
 <meta name="_csrf" th:content="${_csrf.token}">
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" th:src="@{/js/amadeusToken.js}"></script>
 </head>
 <body>
-	<h2>格安航空券を簡単に比較＆予約</h2>
-	<form id="flight-search-form">
-		<input type="radio" name="ticketOption" value="1" checked>片道
-		<input type="radio" name="ticketOption" value="2">往復
-		<br>
-		<label for="origin">出発:</label> 
-		<input type="text" id="origin" name="origin" required>
-		<div id="originSearchResults"></div>
-		<br>
-		<label for="destination">到着:</label>
-		<input type="text" id="destination" name="destination" required>
-		<div id="destinationSearchResults"></div>
-		<br>
-		<input type="text" id="departureDate" name="departureDate" required>
-		<input type="text" id="arrivalDate" name="arrivalDate">
-		<br>
-		<button type="submit">Search</button>
-	</form>
+	<div class="container">
+		<h2>格安航空券を簡単に比較＆予約</h2>
+		<form id="flight-search-form">
+			<input type="radio" name="ticketOption" value="1" checked>片道
+			<input type="radio" name="ticketOption" value="2">往復 <br>
+			<label for="origin">出発:</label> <input type="text" id="origin"
+				name="origin" required>
+			<div id="originSearchResults"></div>
+			<br> <label for="destination">到着:</label> <input type="text"
+				id="destination" name="destination" required>
+			<div id="destinationSearchResults"></div>
+			<br> <input type="text" id="departureDate" name="departureDate"
+				required> <input type="text" id="arrivalDate"
+				name="arrivalDate"> <br>
+			<button type="submit">Search</button>
+		</form>
+		<div id="results">
+			<table class="table table-bordered" id="resultTable" Style="display: none;">
+				<thead>
+					<tr>
+						<th>航空会社</th>
+						<th>出発時間</th>
+						<th>出発空港</th>
+						<th>到着時間</th>
+						<th>到着空港</th>
+						<th>金額</th>
+					</tr>
+				</thead>
+				<tbody>
 
-	<div id="results"></div>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </body>
 <script type="text/javascript" th:src="@{/js/searchFlight.js}"></script>
 </html>
