@@ -1,7 +1,10 @@
 package com.tomato.demo.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -9,14 +12,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tomato.demo.repository.SearchFlightRepository;
 import com.tomato.demo.repository.SearchFlightRepository.*;
-
+import com.tomato.demo.repository.SearchResultRepository;
 
 @Service
 public class SearchFlightService {
-	public SearchFlightRepository parseFlightOffers(String json) throws IOException {
+	public SearchResultRepository parseFlightOffers(String json) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        List<Map<String, Object>> res = new ArrayList<>();
         try 
         {
+        	Map<String, Object> map = new HashMap<>();
         	//必要なデータだけ取得する
         	//JacksonのObjectMapperを使って値をrepoに入れる
         	SearchFlightRepository repo = objectMapper.readValue(json, SearchFlightRepository.class);
@@ -30,17 +35,26 @@ public class SearchFlightService {
                 	{
                 		//航空会社
                 		String carrierCode = segment.getCarrierCode();
-                		Location carrier = repo.getDictionaries().get(carrierCode);
-                		System.out.println(carrier.getCityCode());
+                		String carrier = (String)repo.getDictionaries().get("carriers").getAdditionalProperties().get(carrierCode);
                 		//出発空港
-                		segment.getDeparture().getTerminal();
+                		String departureTerminal = segment.getDeparture().getTerminal();
                 		//出発時間
                 		String departureTime = segment.getDeparture().getAt().split("T")[1];
                 		//到着空港
-                		segment.getArrival().getTerminal();
+                		String arrivalTerminal = segment.getArrival().getTerminal();
                 		//到着時間
                 		String arrivalTime = segment.getArrival().getAt().split("T")[1];
-                		
+                		//金額
+                		double fee = offer.getPrice().getGrandTotal();
+                		map.put("carrier", carrier);
+                		map.put("departureTerminal", departureTerminal);
+                		map.put("departureTime", departureTime);
+                		map.put("arrivalTerminal", arrivalTerminal);
+                		map.put("arrivalTime", arrivalTime);
+                		map.put("fee", fee);
+                		res.add(map);
+                		//Reference型なので、アドレスを更新するため、newする
+                		map = new HashMap<>();
                 	}
                 }
             }
@@ -49,6 +63,9 @@ public class SearchFlightService {
         {
         	e.printStackTrace();
         }
-        return objectMapper.readValue(json, SearchFlightRepository.class);
+        //結果をRepoに入れる
+        SearchResultRepository resultRepo = new SearchResultRepository();
+        resultRepo.setFlightDetails(res);
+        return resultRepo;
 	}
 }
