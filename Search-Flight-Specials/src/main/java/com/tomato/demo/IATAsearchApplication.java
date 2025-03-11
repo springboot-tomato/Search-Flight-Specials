@@ -3,7 +3,6 @@ package com.tomato.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.thymeleaf.spring6.processor.SpringActionTagProcessor;
 
 import com.tomato.demo.service.SearchService;
 
