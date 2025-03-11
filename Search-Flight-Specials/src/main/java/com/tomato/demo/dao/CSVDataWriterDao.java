@@ -2,8 +2,11 @@ package com.tomato.demo.dao;
 
 import java.util.List;
 
-import com.tomato.demo.IATAsearch;
+import org.springframework.stereotype.Repository;
 
+import com.tomato.demo.model.IATAsearch;
+
+@Repository
 public class CSVDataWriterDao {
 
 	public String writeCSVFileData(List<IATAsearch> IATAseachf) {

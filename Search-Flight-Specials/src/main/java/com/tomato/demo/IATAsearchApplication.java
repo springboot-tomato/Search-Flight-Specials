@@ -8,12 +8,12 @@ import org.thymeleaf.spring6.processor.SpringActionTagProcessor;
 import com.tomato.demo.service.SearchService;
 
 @SpringBootApplication
-public class IATAsearch {
+public class IATAsearchApplication {
 
 	public static void main(String[] args) {
 	
 	
-		ConfigurableApplicationContext context = SpringApplication.run(IATAsearch.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(IATAsearchApplication.class, args);
 
 		SearchService searchService = context.getBean(SearchService.class);
 	
