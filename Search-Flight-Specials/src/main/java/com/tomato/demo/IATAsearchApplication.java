@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.tomato.demo.service.SearchService;
+import com.tomato.demo.service.CSVtoIATAService;
 
 @SpringBootApplication
 public class IATAsearchApplication {
@@ -14,7 +14,7 @@ public class IATAsearchApplication {
 	
 		ConfigurableApplicationContext context = SpringApplication.run(IATAsearchApplication.class, args);
 
-		SearchService searchService = context.getBean(SearchService.class);
+		CSVtoIATAService searchService = context.getBean(CSVtoIATAService.class);
 	
 		searchService.doProcess("IATA_list.csv");
 	

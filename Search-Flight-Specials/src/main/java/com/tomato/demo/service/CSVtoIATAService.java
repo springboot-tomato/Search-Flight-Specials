@@ -11,7 +11,7 @@ import com.tomato.demo.model.IATAsearch;
 import com.tomato.demo.util.SearchDataFilter;
 
 @Service
-public class SearchService {
+public class CSVtoIATAService {
 	
 	@Autowired
 	private CSVDataReaderDao csvDataReaderDao;
