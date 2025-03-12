@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>検索結果</title>
+<th:block th:replace="~{fragments/header :: layout}"></th:block>
+<script type="text/javascript" th:src="@{/js/searchResult.js}"></script>
+</head>
+<body>
+	<div id="results">
+		<table class="table table-bordered" id="resultTable">
+			<thead>
+				<tr>
+					<th>航空会社</th>
+					<th>出発時間</th>
+					<th>出発空港</th>
+					<th>到着時間</th>
+					<th>到着空港</th>
+					<th>金額</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

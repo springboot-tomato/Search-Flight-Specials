@@ -51,19 +51,8 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 				})
 					.then(resp => resp.json())
 					.then(data => {
-						resultTable.style.display = '';
-						let tableBody = "";
-						$.each(data.flightDetails, function(index, flight) {
-							tableBody += "<tr>";
-							tableBody += "<td>" + flight.carrier + "</td>";
-							tableBody += "<td>" + flight.departureTime + "</td>";
-							tableBody += "<td>" + flight.departureTerminal + "</td>";
-							tableBody += "<td>" + flight.arrivalTime + "</td>";
-							tableBody += "<td>" + flight.arrivalTerminal + "</td>";
-							tableBody += "<td>" + flight.fee + "</td>";
-							tableBody += "</tr>";
-						})
-						$("#resultTable").append(tableBody);
+						localStorage.setItem('flightDetails', JSON.stringify(data.flightDetails));
+						window.location.href = "/search-results-page";
 					})
 					.catch(error => {
 						console.error("Error sending data to Spring:", error);

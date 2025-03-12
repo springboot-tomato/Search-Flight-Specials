@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Flight Search</title>
-<meta name="_csrf" th:content="${_csrf.token}">
-<link rel="stylesheet"
-	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script type="text/javascript" th:src="@{/js/amadeusToken.js}"></script>
+	<meta charset="UTF-8">
+	<title>航空券検索</title>
+	<th:block th:replace="~{fragments/header :: layout}"></th:block>
+	<script type="text/javascript" th:src="@{/js/amadeusToken.js}"></script>
 </head>
 <body>
 	<div class="container">
@@ -27,23 +23,6 @@
 				name="arrivalDate"> <br>
 			<button type="submit">Search</button>
 		</form>
-		<div id="results">
-			<table class="table table-bordered" id="resultTable" Style="display: none;">
-				<thead>
-					<tr>
-						<th>航空会社</th>
-						<th>出発時間</th>
-						<th>出発空港</th>
-						<th>到着時間</th>
-						<th>到着空港</th>
-						<th>金額</th>
-					</tr>
-				</thead>
-				<tbody>
-
-				</tbody>
-			</table>
-		</div>
 	</div>
 </body>
 <script type="text/javascript" th:src="@{/js/searchFlight.js}"></script>

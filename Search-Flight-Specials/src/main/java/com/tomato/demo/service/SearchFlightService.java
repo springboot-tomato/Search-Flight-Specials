@@ -39,19 +39,22 @@ public class SearchFlightService {
                 		//出発空港
                 		String departureTerminal = segment.getDeparture().getIataCode();
                 		//出発時間
-                		String departureTime = segment.getDeparture().getAt().split("T")[1];
+                		String[] departureAt = segment.getDeparture().getAt().split("T");
                 		//到着空港
                 		String arrivalTerminal = segment.getArrival().getIataCode();
                 		//到着時間
-                		String arrivalTime = segment.getArrival().getAt().split("T")[1];
+                		String[] arrivalAt = segment.getArrival().getAt().split("T");
                 		//金額
                 		double fee = offer.getPrice().getGrandTotal();
+                		//直行
+                		int direct = itinerary.getSegments().size();
                 		map.put("carrier", carrier);
                 		map.put("departureTerminal", departureTerminal);
-                		map.put("departureTime", departureTime);
+                		map.put("departureAt", departureAt);
                 		map.put("arrivalTerminal", arrivalTerminal);
-                		map.put("arrivalTime", arrivalTime);
+                		map.put("arrivalAt", arrivalAt);
                 		map.put("fee", fee);
+                		map.put("direct", direct);
                 		res.add(map);
                 		//Reference型なので、アドレスを更新するため、newする
                 		map = new HashMap<>();
