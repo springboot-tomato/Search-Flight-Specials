@@ -14,4 +14,9 @@ public class MainController {
 	public String mainView() {
 		return "index";
 	}
+	
+	@GetMapping("/search-results-page")
+	public String showSearchResults() {
+	    return "searchResultsView"; 
+	}
 }
