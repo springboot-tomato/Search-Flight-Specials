@@ -1,0 +1,31 @@
+package com.tomato.demo.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tomato.demo.config.AmadeusConfig;
+
+@RestController
+@RequestMapping("/api")
+public class AmadeusTokenController {
+	
+	private final AmadeusConfig amadeusConfig;
+	
+	public AmadeusTokenController(AmadeusConfig amadeusConfig) {
+        this.amadeusConfig = amadeusConfig;
+    }
+	
+	@GetMapping("/get-amadeusKey")
+    public ResponseEntity<Map<String, String>> getCredentials() {
+        Map<String, String> credentials = new HashMap<>();
+        credentials.put("key", amadeusConfig.getKey()); 
+        credentials.put("secret", amadeusConfig.getSecret()); 
+        
+        return ResponseEntity.ok(credentials);
+    }
+}
