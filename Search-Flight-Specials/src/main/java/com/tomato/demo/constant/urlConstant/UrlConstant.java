@@ -14,7 +14,7 @@ public class UrlConstant {
   /**　メイン */
   public static final String MAIN = "/";
   /**　認証不要画面 */
-  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, "/webjars/**"};
+  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, "/webjars/**", "/js/**"};
 
   public static final String MYPAGE = "/mypage";
 }
