@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
@@ -8,14 +8,17 @@
 
 <body>
 	<h2>ログイン画面</h2>
+	<span th:text="${errorMsg}"></span>
 	<!-- thymeleafを使ってデータを送信-->
-	<form th:action="@{/login}" method="post" th:object="${loginForm}">
+	<form action="#" th:action="@{/login}" method="post" th:object="${loginForm}">
 		<!-- th:fieldにformの各フィールド名と一致すべき  -->
 		<div>
-			<label>ID:</label><input type="text" th:field="*{loginId}" />
+			<label>ID:</label><input type="text" th:field="*{email}" />
+			<p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}" ></p>
 		</div>
 		<div>
 			<label>PW:</label><input type="text" th:field="*{password}" />
+			<p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}" ></p>
 		</div>
 		<div>
 			<input type="submit" value="ログイン" />

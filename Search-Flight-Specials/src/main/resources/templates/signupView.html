@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>会員登録</title>
+</head>
+
+<body>
+	<h2>会員登録</h2>
+	<span th:text="${message}"></span>
+	<form action="#" th:action="@{/signup}" method="post" th:object="${signupForm}">
+		<div>
+			<label>email:</label><input type="text" th:field="*{email}">
+			<p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}"></p>
+		</div>
+		<div>
+			<label>password:</label><input type="password" th:field="*{password}">
+			<p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}"></p>
+		</div>
+		<div>
+			<label>nickname:</label><input type="text" th:field="*{nickname}">
+			<p th:if="${#fields.hasErrors('nickname')}" th:errorclass="error" th:errors="*{nickname}"></p>
+		</div>
+		<div>
+			<button>会員登録</button>
+		</div>
+	</form>
+
+</body>
+
+</html>

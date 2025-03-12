@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tomato.demo.repository.SearchFlightRepository;
+import com.tomato.demo.repository.SearchResultRepository;
 import com.tomato.demo.service.SearchFlightService;
 
 @RestController
@@ -25,12 +25,12 @@ public class SearchFlightController {
 	}
 
 	@PostMapping("/search-results")
-	public ResponseEntity<SearchFlightRepository> processResults(@RequestBody Map<String, Object> results) {
+	public ResponseEntity<SearchResultRepository> processResults(@RequestBody Map<String, Object> results) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			String json = objectMapper.writeValueAsString(results);
 
-			SearchFlightRepository flightOffers = searchFlightService.parseFlightOffers(json);
+			SearchResultRepository flightOffers = searchFlightService.parseFlightOffers(json);
 
 			return ResponseEntity.ok(flightOffers);
 		} catch (IOException e) {
