@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.Getter;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchFlightRepository {
 	private Meta meta;
 	@JsonProperty("data")

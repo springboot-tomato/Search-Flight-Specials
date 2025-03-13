@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tomato.demo.config.AmadeusConfig;
+import com.tomato.demo.constant.urlConstant.UrlConstant;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(UrlConstant.API)
 public class AmadeusTokenController {
 	
 	private final AmadeusConfig amadeusConfig;
@@ -20,7 +21,7 @@ public class AmadeusTokenController {
         this.amadeusConfig = amadeusConfig;
     }
 	
-	@GetMapping("/get-amadeusKey")
+	@GetMapping(UrlConstant.GETAMADEUSKEY)
     public ResponseEntity<Map<String, String>> getCredentials() {
         Map<String, String> credentials = new HashMap<>();
         credentials.put("key", amadeusConfig.getKey()); 
