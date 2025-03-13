@@ -75,38 +75,86 @@ destinationInput.addEventListener('input', async function() {
 	finally { }
 })
 
-$(function() {
-	var dateFormat = "yy/mm/dd";
-	$("#departureDate").datepicker({
-		dateFormat: dateFormat,
-		minDate: 0,
-		changeMonth: true,
-		onClose: function(selectedDate) {
-			$("#arrivalDate").datepicker("option", "minDate", selectedDate);
+
+const departurePicker = new tempusDominus.TempusDominus(document.getElementById('departureDatePicker'), {
+	restrictions: {
+		minDate: new Date()
+	},
+	display: {
+		components: {
+			calendar: true,
+			date: true,
+			month: true,
+			year: true,
+			decades: false,
+			clock: false
+		},
+		icons: {
+			type: 'icons',
+			date: 'fa fa-solid fa-calendar',
+			previous: 'fa fa-solid fa-chevron-left',
+			next: 'fa fa-solid fa-chevron-right'
 		}
-	});
-	$("#arrivalDate").datepicker({
-		dateFormat: dateFormat,
-		changeMonth: true,
-		onClose: function(selectedDate) {
-			$("#departureDate").datepicker("option", "maxDate", selectedDate);
+	},
+	localization: {
+		locale: 'ja'
+	}
+});
+
+const returnPicker = new tempusDominus.TempusDominus(document.getElementById('returnDatePicker'), {
+	restrictions: {
+		minDate: new Date()
+	},
+	display: {
+		components: {
+			calendar: true,
+			date: true,
+			month: true,
+			year: true,
+			decades: false,
+			clock: false
+		},
+		icons: {
+			type: 'icons',
+			date: 'fa fa-solid fa-calendar',
+			previous: 'fa fa-solid fa-chevron-left',
+			next: 'fa fa-solid fa-chevron-right'
 		}
+	},
+	localization: {
+		locale: 'ja'
+	}
+});
+
+departurePicker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+	if (e.date) {
+		returnPicker.updateOptions({
+			restrictions: {
+				minDate: e.date
+			}
+		});
+	}
+});
+
+document.querySelectorAll('input[name=ticketOption]').forEach((elem) => {
+	elem.addEventListener("change", function(event) {
+		updateReturnDateVisibility();
 	});
 });
 
-function toggleArrivalDate() {
+function updateReturnDateVisibility() {
 
 	const selectOption = document.querySelector('input[name="ticketOption"]:checked').value;
+	const returnDateContainer = document.getElementById("returnDateContainer");
 
 	if (selectOption === '2') {
-		arrivalDateInput.style.display = '';
+		returnDateContainer.classList.remove("d-none");
 		arrivalDateInput.required = true;
 	} else {
-		arrivalDateInput.style.display = 'none';
+		returnDateContainer.classList.add("d-none");
 		arrivalDateInput.required = false;
 	}
-
 }
 
-ticketOptions.forEach(option => { option.addEventListener('change', toggleArrivalDate) });
-toggleArrivalDate();
+window.onload = updateReturnDateVisibility;
+window.addEventListener('pageshow', updateReturnDateVisibility);

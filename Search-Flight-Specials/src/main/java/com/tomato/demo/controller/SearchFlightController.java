@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tomato.demo.constant.urlConstant.UrlConstant;
 import com.tomato.demo.repository.SearchResultRepository;
 import com.tomato.demo.service.SearchFlightService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(UrlConstant.API)
 public class SearchFlightController {
 
 	private final SearchFlightService searchFlightService;
@@ -24,7 +25,7 @@ public class SearchFlightController {
 		this.searchFlightService = searchFlightService;
 	}
 
-	@PostMapping("/search-results")
+	@PostMapping(UrlConstant.SEARCHRESULTS)
 	public ResponseEntity<SearchResultRepository> processResults(@RequestBody Map<String, Object> results) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
