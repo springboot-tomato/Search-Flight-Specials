@@ -1,0 +1,46 @@
+@media ( max-width : 992px) {
+	.navbar-collapse {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding-right: 15px;
+		padding-left: 15px;
+		padding-bottom: 15px;
+		width: 40%;
+		height: 100%;
+		background-color: #f8f9fa;
+		z-index: 1000;
+		transition: 0.1s ease-in-out;
+		transform: translateX(100%);
+	}
+	.navbar-collapse.show {
+		transform: translateX(0);
+	}
+	.navbar-nav {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.navbar-nav .nav-item {
+		margin: 10px 0;
+	}
+}
+
+@media ( min-width : 992px) {
+	.login-page-nav .navbar-collapse {
+		display: none !important;
+	}
+	.login-page-nav .container-fluid {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 40px;
+	}
+	.login-page-nav .navbar-brand {
+		position: static;
+		transform: none;
+		margin: 0;
+	}
+}
