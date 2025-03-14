@@ -3,7 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	var navbarCollapse = document.querySelector('.navbar-collapse');
 
 	navbarToggler.addEventListener('click', function() {
-		navbarCollapse.classList.toggle('show');
+		if (!navbarCollapse.classList.toggle('show')) {
+			navbarCollapse.classList.toggle('show');
+		}
+		else {
+			navbarCollapse.classList.remove('show');
+		}
 	});
 
 	document.addEventListener('click', function(event) {
