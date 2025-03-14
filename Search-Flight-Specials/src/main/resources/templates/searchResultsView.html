@@ -6,23 +6,13 @@
 <th:block th:replace="~{fragments/header :: layout}"></th:block>
 <script type="text/javascript" th:src="@{/js/searchResult.js}"></script>
 </head>
-<body>
-	<div id="results">
-		<table class="table table-bordered" id="resultTable">
-			<thead>
-				<tr>
-					<th>航空会社</th>
-					<th>出発時間</th>
-					<th>出発空港</th>
-					<th>到着時間</th>
-					<th>到着空港</th>
-					<th>金額</th>
-				</tr>
-			</thead>
-			<tbody>
-
-			</tbody>
-		</table>
-	</div>
+<body class="bg-secondary-subtle">
+    <div class="container py-5">
+        <th:block th:replace="~{fragments/layout :: header(loginPage=false)}"></th:block>
+        <div id="results" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <!-- 検索結果のカードがこちらに表示される -->
+        </div>
+        <th:block th:replace="~{fragments/layout :: footer}"></th:block>
+    </div>
 </body>
 </html>
