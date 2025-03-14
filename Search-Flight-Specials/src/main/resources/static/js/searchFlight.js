@@ -66,7 +66,36 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 				})
 					.then(resp => resp.json())
 					.then(data => {
-						localStorage.setItem('flightDetails', JSON.stringify(data.flightDetails)); // dataデータをJSONに変換してsearchResultに転送
+						if (selectOption === '1') {
+							//直行だけデータとして取得
+							const flights = data.flightDetails.filter(flight => flight.direct === 1);
+							localStorage.setItem('flightDetails', JSON.stringify(flights)); // dataデータをJSONに変換してsearchResultに転送
+						}
+						else {
+							//直行だけデータとして取得、
+							const outboundFlights = data.flightDetails.filter(flight => flight.departureTerminal === origin && flight.arrivalTerminal === destination && flight.direct === 1);
+							const inboundFlights = data.flightDetails.filter(flight => flight.arrivalTerminal === origin && flight.departureTerminal === destination && flight.direct === 1);
+							let roundTrips = [];
+							//行きは直行帰りは乗継などで航空券の情報が間違うかもしれないので制御
+							for (let i = 0; i < outboundFlights.length; i++) {
+								let j = i;
+								while (outboundFlights[i].fee != inboundFlights[j].fee) {
+									j++;
+									if (inboundFlights.length <= j) {
+										break;
+									}
+								}
+								if (inboundFlights.length <= j) {
+									break;
+								}
+								roundTrips.push({
+									outbound: outboundFlights[i],
+									inbound: inboundFlights[j]
+								})
+							}
+							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
+						}
+						localStorage.setItem('selectOption', JSON.stringify(selectOption));
 						window.location.href = "/search-results-page";
 					})
 					.catch(error => {
