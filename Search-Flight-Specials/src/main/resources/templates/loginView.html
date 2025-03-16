@@ -2,28 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<title>ログイン画面</title>
+<meta charset="UTF-8">
+<title>ログイン画面</title>
+<th:block th:replace="~{fragments/header :: layout}"></th:block>
 </head>
+<body class="bg-secondary-subtle">
+	<div class="container py-5">
+		<th:block th:replace="~{fragments/layout :: header(loginPage=true)}"></th:block>
 
-<body>
-	<h2>ログイン画面</h2>
-	<span th:text="${errorMsg}"></span>
-	<!-- thymeleafを使ってデータを送信-->
-	<form action="#" th:action="@{/login}" method="post" th:object="${loginForm}">
-		<!-- th:fieldにformの各フィールド名と一致すべき  -->
-		<div>
-			<label>ID:</label><input type="text" th:field="*{email}" />
-			<p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}" ></p>
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h2 class="card-title text-center mb-4">ログイン</h2>
+						<div th:if="${errorMsg}" class="alert alert-danger" role="alert"
+							th:text="${errorMsg}"></div>
+						<form action="#" th:action="@{/login}" method="post"
+							th:object="${loginForm}">
+							<div class="mb-3">
+								<label for="email" class="form-label">メールアドレス</label> <input
+									type="email" class="form-control" id="email"
+									th:field="*{email}" required>
+								<div class="form-text text-danger"
+									th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+							</div>
+							<div class="mb-3">
+								<label for="password" class="form-label">パスワード</label> <input
+									type="password" class="form-control" id="password"
+									th:field="*{password}" required>
+								<div class="form-text text-danger"
+									th:if="${#fields.hasErrors('password')}"
+									th:errors="*{password}"></div>
+							</div>
+							<div class="d-grid gap-2">
+								<button type="submit" class="btn btn-secondary">ログイン</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div>
+					<a class="link-underline-secondary" th:href="@{/signup}">会員登録はこちら</a>
+				</div>
+			</div>
 		</div>
-		<div>
-			<label>PW:</label><input type="text" th:field="*{password}" />
-			<p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}" ></p>
-		</div>
-		<div>
-			<input type="submit" value="ログイン" />
-		</div>
-	</form>
+
+		<th:block th:replace="~{fragments/layout :: footer}"></th:block>
+
+	</div>
 </body>
 
 </html>

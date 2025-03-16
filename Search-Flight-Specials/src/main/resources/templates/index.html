@@ -6,9 +6,9 @@
 <th:block th:replace="~{fragments/header :: layout}"></th:block>
 <script type="text/javascript" th:src="@{/js/amadeusToken.js}"></script>
 </head>
-<body class="bg-light">
+<body class="bg-secondary-subtle">
 	<div class="container py-5">
-		<th:block th:replace="~{fragments/layout :: header}"></th:block>
+		<th:block th:replace="~{fragments/layout :: header(loginPage=false)}"></th:block>
 
 		<div class="card shadow-sm">
 			<div class="card-body">
@@ -19,37 +19,38 @@
 						<div class="btn-group w-100" role="group">
 							<input type="radio" class="btn-check" name="ticketOption"
 								id="oneWay" value="1" checked> <label
-								class="btn btn-outline-primary" for="oneWay">片道</label> <input
+								class="btn btn-outline-secondary" for="oneWay">片道</label> <input
 								type="radio" class="btn-check" name="ticketOption"
 								id="roundTrip" value="2"> <label
-								class="btn btn-outline-primary" for="roundTrip">往復</label>
+								class="btn btn-outline-secondary" for="roundTrip">往復</label>
 						</div>
 					</div>
 
 					<div class="row g-3">
-						<div class="col-md-4">
+						<div class="col-lg-4">
 							<label for="origin" class="form-label">出発:</label> <input
 								type="text" class="form-control" id="origin" name="origin"
 								required>
 							<div id="originSearchResults" class="mt-2"></div>
 						</div>
 
-						<div class="col-md-4">
+						<div class="col-lg-4">
 							<label for="destination" class="form-label">到着:</label> <input
 								type="text" class="form-control" id="destination"
 								name="destination" required>
 							<div id="destinationSearchResults" class="mt-2"></div>
 						</div>
 
-						<div class="col-md-4">
+						<div class="col-lg-4">
 							<div class="row g-3">
-								<div class="col-12 col-md-6">
+								<div class="col-12 col-lg-6">
 									<label for="departureDatePicker" class="form-label">出発日:</label>
 									<div class="input-group" id="departureDatePicker"
 										data-td-target-input="nearest" data-td-target-toggle="nearest">
 										<input type="text" class="form-control" id="departureDate"
 											name="departureDate" data-td-target="#departureDatePicker"
-											required> <span class="input-group-text"
+											autocomplete="off" readonly required> <span
+											class="input-group-text"
 											data-td-target="#departureDatePicker"
 											data-td-toggle="datetimepicker"> <i
 											class="fas fa-calendar"></i>
@@ -57,14 +58,14 @@
 									</div>
 								</div>
 
-								<div class="col-12 col-md-6 d-none" id="returnDateContainer">
+								<div class="col-12 col-lg-6 d-none" id="returnDateContainer">
 									<label for="returnDatePicker" class="form-label">帰国日:</label>
 									<div class="input-group" id="returnDatePicker"
 										data-td-target-input="nearest" data-td-target-toggle="nearest">
 										<input type="text" class="form-control" id="arrivalDate"
-											name="arrivalDate" data-td-target="#returnDatePicker">
-										<span class="input-group-text"
-											data-td-target="#returnDatePicker"
+											name="arrivalDate" data-td-target="#returnDatePicker"
+											autocomplete="off" readonly> <span
+											class="input-group-text" data-td-target="#returnDatePicker"
 											data-td-toggle="datetimepicker"> <i
 											class="fas fa-calendar"></i>
 										</span>
@@ -75,7 +76,12 @@
 					</div>
 
 					<div class="text-center mt-4">
-						<button type="submit" class="btn btn-primary btn-lg">検索</button>
+						<button type="submit" class="btn btn-secondary btn-lg"
+							id="searchButton">検索</button>
+						<div class="spinner-border text-secondary d-none" role="status"
+							id="loadingSpinner">
+							<span class="visually-hidden">Loading...</span>
+						</div>
 					</div>
 				</form>
 			</div>

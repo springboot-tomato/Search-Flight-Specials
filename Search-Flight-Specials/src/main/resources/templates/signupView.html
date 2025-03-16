@@ -2,31 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<title>会員登録</title>
+<meta charset="UTF-8">
+<title>会員登録</title>
+<th:block th:replace="~{fragments/header :: layout}"></th:block>
 </head>
 
-<body>
-	<h2>会員登録</h2>
-	<span th:text="${message}"></span>
-	<form action="#" th:action="@{/signup}" method="post" th:object="${signupForm}">
-		<div>
-			<label>email:</label><input type="text" th:field="*{email}">
-			<p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}"></p>
-		</div>
-		<div>
-			<label>password:</label><input type="password" th:field="*{password}">
-			<p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}"></p>
-		</div>
-		<div>
-			<label>nickname:</label><input type="text" th:field="*{nickname}">
-			<p th:if="${#fields.hasErrors('nickname')}" th:errorclass="error" th:errors="*{nickname}"></p>
-		</div>
-		<div>
-			<button>会員登録</button>
-		</div>
-	</form>
+<body class="bg-secondary-subtle">
+	<div class="container py-5">
+		<th:block th:replace="~{fragments/layout :: header(loginPage=true)}"></th:block>
 
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h2 class="card-title text-center mb-4">会員登録</h2>
+
+						<div th:if="${message}" class="alert alert-info" role="alert"
+							th:text="${message}"></div>
+
+						<form action="#" th:action="@{/signup}" method="post"
+							th:object="${signupForm}">
+							<div class="mb-3">
+								<label for="email" class="form-label">メールアドレス</label> <input
+									type="email" class="form-control" id="email"
+									th:field="*{email}" required>
+								<div class="form-text text-danger"
+									th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+							</div>
+
+							<div class="mb-3">
+								<label for="password" class="form-label">パスワード</label> <input
+									type="password" class="form-control" id="password"
+									th:field="*{password}" required>
+								<div class="form-text text-danger"
+									th:if="${#fields.hasErrors('password')}"
+									th:errors="*{password}"></div>
+							</div>
+
+							<div class="mb-3">
+								<label for="nickname" class="form-label">ニックネーム</label> <input
+									type="text" class="form-control" id="nickname"
+									th:field="*{nickname}" required>
+								<div class="form-text text-danger"
+									th:if="${#fields.hasErrors('nickname')}"
+									th:errors="*{nickname}"></div>
+							</div>
+
+							<div class="d-grid gap-2">
+								<button type="submit" class="btn btn-secondary">会員登録</button>
+							</div>
+						</form>
+
+						<div class="mt-3 text-center">
+							<a class="link-underline-secondary" th:href="@{/login}">既にアカウントをお持ちの方はこちら</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<th:block th:replace="~{fragments/layout :: footer}"></th:block>
+	</div>
 </body>
+
 
 </html>
