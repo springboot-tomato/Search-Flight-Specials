@@ -114,6 +114,7 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 	}
 });
 
+<<<<<<< Updated upstream
 /*
 	検索：ソウル
 	リターン：ICN、GMP（IATAコード）
@@ -149,6 +150,16 @@ const departurePicker = new tempusDominus.TempusDominus(document.getElementById(
 			date: 'fa fa-solid fa-calendar',
 			previous: 'fa fa-solid fa-chevron-left',
 			next: 'fa fa-solid fa-chevron-right'
+=======
+$(function() {
+	var dateFormat = "yy/mm/dd";
+	$("#departureDate").datepicker({
+		dateFormat: dateFormat,
+		minDate: 0,
+		changeMonth: true,
+		onClose: function(selectedDate) {
+			$("#arrivalDate").datepicker("option", "minDate", selectedDate);
+>>>>>>> Stashed changes
 		}
 	},
 	localization: {
@@ -224,8 +235,47 @@ document.querySelectorAll('input[name=ticketOption]').forEach((elem) => {
 	});
 });
 
+<<<<<<< Updated upstream
 //片道・往復で表示されるContainerを制御
 function updateReturnDateVisibility() {
+=======
+function setupAutocomplete(inputElement, resultsElement) {
+    inputElement.addEventListener('input', async function() {
+        const query = this.value;
+        if (query.length < 2) {
+            resultsElement.innerHTML = '';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/iata/search?keyword=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            resultsElement.innerHTML = '';
+
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.textContent = item.label;
+                div.addEventListener('click', function() {
+                    inputElement.value = item.value;
+                    resultsElement.innerHTML = '';
+                });
+                resultsElement.appendChild(div);
+            });
+        } catch (error) {
+            console.error('Error fetching IATA data:', error);
+        }
+    });
+}
+
+// 出発地入力フィールド自動完成設定
+setupAutocomplete(originInput, originSearchResults);
+
+// 到着地入力フィールド自動完成設定
+setupAutocomplete(destinationInput, destinationSearchResults);
+
+function toggleArrivalDate() {
+>>>>>>> Stashed changes
 
 	const selectOption = document.querySelector('input[name="ticketOption"]:checked').value;
 	const returnDateContainer = document.getElementById("returnDateContainer");
