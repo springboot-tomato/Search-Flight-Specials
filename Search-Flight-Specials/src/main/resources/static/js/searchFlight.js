@@ -8,7 +8,8 @@ const originSearchResults = document.getElementById('originSearchResults');
 const destinationSearchResults = document.getElementById('destinationSearchResults');
 const resultTable = document.getElementById('resultTable');
 let debounceTimer;
-let iataFlg = false;
+let iataOriginFlg = false;
+let iataDestinationFlg = false;
 let origin = "";
 let destination = "";
 
@@ -122,22 +123,17 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 */
 
 originInput.addEventListener('input', function() {
-
 	clearTimeout(debounceTimer);
 	debounceTimer = setTimeout(() => {
 		const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
 		const originValue = this.value;
 		const originSearchResults = document.getElementById('originSearchResults');
 
-		function getByteLength(str) {
-			return new Blob([str]).size;
-		}
-
 		//検索は4バイト超過16バイト以下の場合に実施
 		if (getByteLength(originValue) < 4 || getByteLength(originValue) >= 16) return;
 		//inputがFocusOutする時で実行されるため、Flagで制御
-		if (originSearchResults.textContent.length === 0 && iataFlg) {
-			iataFlg = false;
+		if (originSearchResults.textContent.length === 0 && iataOriginFlg) {
+			iataOriginFlg = false;
 			return;
 		}
 
@@ -156,7 +152,6 @@ originInput.addEventListener('input', function() {
 				return resp.json();
 			})
 			.then(data => {
-				console.log(data)
 				if (data.length != 0) {
 					const dropdownList = document.createElement('ul');
 					dropdownList.className = 'list-group';
@@ -177,7 +172,7 @@ originInput.addEventListener('input', function() {
 					originSearchResults.appendChild(dropdownList);
 				} else {
 					originSearchResults.innerHTML = '<p class="text-muted">検索結果がありません</p>';
-					iataFlg = true;
+					iataOriginFlg = true;
 				}
 			})
 			.catch(error => {
@@ -186,15 +181,76 @@ originInput.addEventListener('input', function() {
 	}, 300);
 });
 
-destinationInput.addEventListener('input', async function() {
-	const destinationValue = destinationInput.value;
-	try { console.log("後でｃｓｖから取得し、データを取得") }
-	finally { }
-})
+destinationInput.addEventListener('input', function() {
+	clearTimeout(debounceTimer);
+	debounceTimer = setTimeout(() => {
+		const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
+		const destinationValue = this.value;
+		const destinationSearchResults = document.getElementById('destinationSearchResults');
+
+		//検索は4バイト超過16バイト以下の場合に実施
+		if (getByteLength(destinationValue) < 4 || getByteLength(destinationValue) >= 16) return;
+		//inputがFocusOutする時で実行されるため、Flagで制御
+		if (destinationSearchResults.textContent.length === 0 && iataDestinationFlg) {
+			iataDestinationFlg = false;
+			return;
+		}
+
+		fetch('/api/search-iataCode', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-TOKEN': csrfToken
+			},
+			body: JSON.stringify({ keyword: destinationValue })
+		})
+			.then(resp => {
+				if (!resp.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return resp.json();
+			})
+			.then(data => {
+				if (data.length != 0) {
+					const dropdownList = document.createElement('ul');
+					dropdownList.className = 'list-group';
+
+					data.forEach(item => {
+						const listItem = document.createElement('li');
+						listItem.className = 'list-group-item list-group-item-action';
+						listItem.textContent = item.label;
+						listItem.addEventListener('click', () => {
+							destinationInput.value = item.label;
+							destination = item.value;
+							destinationSearchResults.innerHTML = '';
+						});
+						dropdownList.appendChild(listItem);
+					});
+
+					destinationSearchResults.innerHTML = '';
+					destinationSearchResults.appendChild(dropdownList);
+				} else {
+					destinationSearchResults.innerHTML = '<p class="text-muted">検索結果がありません</p>';
+					iataDestinationFlg = true;
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}, 300);
+});
+
+
+function getByteLength(str) {
+	return new Blob([str]).size;
+}
 
 document.addEventListener('click', (event) => {
 	if (!originInput.contains(event.target) && !originSearchResults.contains(event.target)) {
 		originSearchResults.innerHTML = '';
+	}
+	if (!destinationInput.contains(event.target) && !destinationSearchResults.contains(event.target)) {
+		destinationSearchResults.innerHTML = '';
 	}
 });
 
