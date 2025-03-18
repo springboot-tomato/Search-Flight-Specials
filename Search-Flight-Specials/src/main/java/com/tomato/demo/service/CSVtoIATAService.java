@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tomato.demo.dao.IataCsvReaderDao;
+import com.tomato.demo.dao.IATADataReaderDao;
+import com.tomato.demo.dao.CSVDataWriterDao;
 import com.tomato.demo.model.IATAsearch;
 import com.tomato.demo.util.SearchDataFilter;
 
@@ -17,42 +18,48 @@ import jakarta.annotation.PostConstruct;
 public class CSVtoIATAService {
 
 	@Autowired
+	private IATADataReaderDao iataDataReaderDao;
+
+	@Autowired
 	private SearchDataFilter SearchDataFilter;
 
-	// read Data from CSV file
-	private final IataCsvReaderDao iataReader;
+	@Autowired
+	private CSVDataWriterDao csvDataWriterDao;
+    
+    private List<IATAsearch> cachedIATAData;
 
-	public CSVtoIATAService(IataCsvReaderDao iataReader) {
-		this.iataReader = iataReader;
-	}
+    @PostConstruct
+    public void initialize() {
+        cachedIATAData = iataDataReaderDao.readCSVFileData("IATA_list.csv");
+    }
 
-	private String fileName = "IATA_list.csv";
+    public List<Map<String, String>> searchIATAByKeyword(String keyword) {
+        return cachedIATAData.stream()
+            .filter(iata -> iata.getAirportNmEng().toLowerCase().contains(keyword.toLowerCase()) ||
+                            iata.getAirportNmKr().contains(keyword) ||
+                            iata.getCityNmEng().toLowerCase().contains(keyword.toLowerCase()))
+            .map(iata -> Map.of(
+                "label", iata.getAirportNmEng() + " - " + iata.getAirportNmKr() + " (" + iata.getCityNmEng() + ")",
+                "value", iata.getAirportIATA()
+            ))
+            .collect(Collectors.toList());
+    }
 
-	private List<IATAsearch> cachedIATAData;
-
-	@PostConstruct
-	public void initialize() {
-		iataReader.readCSVFileData(fileName);
-		cachedIATAData = iataReader.getDataList();
-	}
-
-	public List<Map<String, String>> searchIATAByKeyword(String keyword) {
-		return cachedIATAData.stream()
-				.filter(iata -> iata.getAirportNmEng().toLowerCase().split("airport")[0].split("international")[0].contains(keyword.toLowerCase())
-						|| iata.getAirportNmKr().split("공항")[0].split("국제")[0].contains(keyword)
-						|| iata.getCityNmEng().toLowerCase().contains(keyword.toLowerCase()))
-				.map(iata -> Map.of("label",
-						iata.getAirportNmEng() + " - " + iata.getAirportNmKr() + " (" + iata.getCityNmEng() + ")",
-						"value", iata.getAirportIATA()))
-				.collect(Collectors.toList());
-	}
-
-	public void doProcess() {
-		// write a business logic
-		List<IATAsearch> IATAseachf = iataReader.getDataList();
-
-		// Filter Search Data
+	public List<IATAsearch> doProcess() {
+		//write a business logic
+		
+		//read Data from CSV file
+		List<IATAsearch> IATAseachf = iataDataReaderDao.readCSVFileData("IATA_list.csv");
+		
+		//Filter Search Data
 		List<IATAsearch> IATAsearchData = SearchDataFilter.filterSearchData(IATAseachf);
+
+		//Store Filter Data in another CSV file
+		String status = csvDataWriterDao.writeCSVFileData(IATAseachf);
+
+		System.out.println("CSV File Writing Status: " + status);
+		
+		return IATAseachf; // IATAseachfを戻り値にする。
 	}
 
 }
