@@ -197,3 +197,116 @@ document.addEventListener('click', (event) => {
 		originSearchResults.innerHTML = '';
 	}
 });
+
+//本日より前の日、帰国日より後の日はキャレンダーから選択不可
+const departurePicker = new tempusDominus.TempusDominus(document.getElementById('departureDatePicker'), {
+	restrictions: {
+		minDate: new Date(),
+	},
+	display: {
+		components: {
+			calendar: true,
+			date: true,
+			month: true,
+			year: true,
+			decades: false,
+			clock: false
+		},
+		icons: {
+			type: 'icons',
+			date: 'fa fa-solid fa-calendar',
+			previous: 'fa fa-solid fa-chevron-left',
+			next: 'fa fa-solid fa-chevron-right'
+		}
+	},
+	localization: {
+		locale: 'ja'
+	}
+});
+
+//出発日より前の日はキャレンダーから選択不可
+const returnPicker = new tempusDominus.TempusDominus(document.getElementById('returnDatePicker'), {
+	restrictions: {
+		minDate: new Date(),
+	},
+	display: {
+		components: {
+			calendar: true,
+			date: true,
+			month: true,
+			year: true,
+			decades: false,
+			clock: false
+		},
+		icons: {
+			type: 'icons',
+			date: 'fa fa-solid fa-calendar',
+			previous: 'fa fa-solid fa-chevron-left',
+			next: 'fa fa-solid fa-chevron-right'
+		}
+	},
+	localization: {
+		locale: 'ja'
+	}
+});
+
+departurePicker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+	if (e.date) {
+		const minReturnDate = new Date(e.date);
+		minReturnDate.setHours(0, 0, 0, 0);
+
+		returnPicker.updateOptions({
+			restrictions: {
+				minDate: minReturnDate
+			}
+		});
+	}
+});
+
+returnPicker.subscribe(tempusDominus.Namespace.events.change, (e) => {
+	if (e.date) {
+		const maxDepartureDate = new Date(e.date);
+		maxDepartureDate.setHours(23, 59, 59, 999);
+
+		departurePicker.updateOptions({
+			restrictions: {
+				maxDate: maxDepartureDate
+			}
+		});
+	}
+});
+
+//ラベルを選択した場合にキャレンダーを表示
+departureDateInput.addEventListener('click', function() {
+	departurePicker.toggle();
+});
+
+arrivalDateInput.addEventListener('click', function() {
+	returnPicker.toggle();
+});
+
+//片道・往復のラジオボタンを選択した場合にupdateReturnDateVisibilityを実行
+document.querySelectorAll('input[name=ticketOption]').forEach((elem) => {
+	elem.addEventListener("change", function(event) {
+		updateReturnDateVisibility();
+	});
+});
+
+//片道・往復で表示されるContainerを制御
+function updateReturnDateVisibility() {
+
+	const selectOption = document.querySelector('input[name="ticketOption"]:checked').value;
+	const returnDateContainer = document.getElementById("returnDateContainer");
+
+	if (selectOption === '2') {
+		returnDateContainer.classList.remove("d-none");
+		arrivalDateInput.required = true;
+	} else {
+		returnDateContainer.classList.add("d-none");
+		arrivalDateInput.required = false;
+	}
+}
+
+//BackSpaceなどで往復選択で帰国日のContainerが表示されるため、１回実行
+window.onload = updateReturnDateVisibility;
+window.addEventListener('pageshow', updateReturnDateVisibility);
