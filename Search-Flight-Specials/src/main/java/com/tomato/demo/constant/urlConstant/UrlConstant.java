@@ -21,10 +21,8 @@ public class UrlConstant {
   public static final String SEARCHRESULTS = "/search-results";  
   /**　結果Pageー */
   public static final String SEARCHRESULTSPAGE = "/search-results-page";
-  /**　iataCode検索ー */
-  public static final String SEARCHIATACODE = "/search-iataCode";
   /**　認証不要画面 */
-  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, API+GETAMADEUSKEY, API+SEARCHRESULTS, API+SEARCHIATACODE, SEARCHRESULTSPAGE, "/webjars/**", "/js/**", "/css/**"};
+  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, API+GETAMADEUSKEY, API+SEARCHRESULTS, SEARCHRESULTSPAGE, "/webjars/**", "/js/**", "/css/**", "/api/iata", "/search"};
 
   public static final String MYPAGE = "/mypage";
   
