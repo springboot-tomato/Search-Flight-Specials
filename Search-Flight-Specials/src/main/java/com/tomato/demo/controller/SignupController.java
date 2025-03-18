@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.tomato.demo.constant.messagesConstant.SignupPageMsgConstant;
 import com.tomato.demo.constant.urlConstant.UrlConstant;
 import com.tomato.demo.entity.UsersEntity;
@@ -51,7 +50,9 @@ public class SignupController {
    * @return signupView.html
    */
   @PostMapping(UrlConstant.SIGNUP)
-  public String signup(Model model, @Valid SignupForm form, BindingResult bindingResult, RedirectAttributes reAttributes) {
+//   public String signup(Model model, @Valid SignupForm form, BindingResult bindingResult,
+//   RedirectAttributes reAttributes) {
+  public String signup(Model model, @Valid SignupForm form, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
       System.out.println(bindingResult.hasErrors());
       return "signupView";
@@ -60,13 +61,14 @@ public class SignupController {
     Optional<UsersEntity> userInfo = signupService.signupUser(form);
 
     message = editMessage(userInfo);
-    if(!userInfo.isEmpty()) {
-      reAttributes.addFlashAttribute("message", message);
-      return "redirect:/loginView";
+    System.out.println("signup = " + message);
+    if (!userInfo.isEmpty()) {
+      model.addAttribute("message", message);
+//      return "redirect:/signupView";
     } else {
       model.addAttribute("errorMsg", message);
-      return "signupView";
     }
+    return "signupView";
 
   }
 
@@ -85,13 +87,13 @@ public class SignupController {
     }
     return message;
   }
-  
-//  @ResponseStatus(HttpStatus.BAD_REQUEST)
-//  @ExceptionHandler(MethodArgumentNotValidException.class)
-//  public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-//    
-//    Map<String, String> errors = new HashedMap<>();
-//    
-//  }
+
+  // @ResponseStatus(HttpStatus.BAD_REQUEST)
+  // @ExceptionHandler(MethodArgumentNotValidException.class)
+  // public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+  //
+  // Map<String, String> errors = new HashedMap<>();
+  //
+  // }
 
 }

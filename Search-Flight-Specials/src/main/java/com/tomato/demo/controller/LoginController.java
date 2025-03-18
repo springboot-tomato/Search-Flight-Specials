@@ -4,13 +4,13 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import com.tomato.demo.constant.urlConstant.UrlConstant;
 import com.tomato.demo.form.LoginForm;
 import com.tomato.demo.service.UsersService;
@@ -49,12 +49,8 @@ public class LoginController {
    *
    */
   @GetMapping(UrlConstant.LOGIN)
-  public String loginView(Model model, LoginForm form, @ModelAttribute("message")String message) {
-    if(!message.isEmpty()) {
-      model.addAttribute("message", message);
-      
-    }
-    
+  public String loginView(@Param(value = "message") String message, Model model, LoginForm form) {
+    model.addAttribute("message", message);
     return "loginView";
   }
 
