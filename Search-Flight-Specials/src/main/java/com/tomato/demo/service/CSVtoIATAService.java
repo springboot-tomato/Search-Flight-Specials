@@ -38,8 +38,8 @@ public class CSVtoIATAService {
 
 	public List<Map<String, String>> searchIATAByKeyword(String keyword) {
 		return cachedIATAData.stream()
-				.filter(iata -> iata.getAirportNmEng().split("Airport")[0].toLowerCase().contains(keyword.toLowerCase())
-						|| iata.getAirportNmKr().contains(keyword)
+				.filter(iata -> iata.getAirportNmEng().toLowerCase().split("airport")[0].split("international")[0].contains(keyword.toLowerCase())
+						|| iata.getAirportNmKr().split("공항")[0].split("국제")[0].contains(keyword)
 						|| iata.getCityNmEng().toLowerCase().contains(keyword.toLowerCase()))
 				.map(iata -> Map.of("label",
 						iata.getAirportNmEng() + " - " + iata.getAirportNmKr() + " (" + iata.getCityNmEng() + ")",
