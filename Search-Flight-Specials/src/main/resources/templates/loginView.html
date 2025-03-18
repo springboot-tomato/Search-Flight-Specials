@@ -16,15 +16,15 @@
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h2 class="card-title text-center mb-4">ログイン</h2>
-						<!--						<div th:if="${param.error}" th:text="${param.error.message}">-->
-						<!--							Invalid username and password.</div>-->
+						<div th:if="${param.error}" th:text="${param.errorMsg}">
+							Invalid username and password.</div>
 						<div th:if="${param.message}" class="alert alert-info" role="alert" th:text="${param.message}">
 						</div>
-		
+
 						<div th:if="${errorMsg}" class="alert alert-danger" role="alert" th:text="${errorMsg}"></div>
 						<form action="#" th:action="@{/login}" method="post" th:object="${loginForm}">
 							<div class="mb-3">
-								<label for="email" class="form-label">メールアドレス</label> <input type="email"
+								<label for="email" class="form-label">メールアドレス</label> <input type="text"
 									class="form-control" id="email" th:field="*{email}">
 								<div class="form-text text-danger" th:if="${#fields.hasErrors('email')}"
 									th:errors="*{email}"></div>

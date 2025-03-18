@@ -54,14 +54,12 @@ public class SignupController {
 //   RedirectAttributes reAttributes) {
   public String signup(Model model, @Valid SignupForm form, BindingResult bindingResult) {
     if (bindingResult.hasErrors()) {
-      System.out.println(bindingResult.hasErrors());
       return "signupView";
     }
     String message;
     Optional<UsersEntity> userInfo = signupService.signupUser(form);
 
     message = editMessage(userInfo);
-    System.out.println("signup = " + message);
     if (!userInfo.isEmpty()) {
       model.addAttribute("message", message);
 //      return "redirect:/signupView";

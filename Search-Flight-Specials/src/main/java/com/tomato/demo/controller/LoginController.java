@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
@@ -49,8 +48,7 @@ public class LoginController {
    *
    */
   @GetMapping(UrlConstant.LOGIN)
-  public String loginView(@Param(value = "message") String message, Model model, LoginForm form) {
-    model.addAttribute("message", message);
+  public String loginView(Model model, LoginForm form) {
     return "loginView";
   }
 
@@ -64,43 +62,13 @@ public class LoginController {
   @GetMapping(value = UrlConstant.LOGIN, params = "error")
   public String loginWithErrorView(Model model, @Valid LoginForm form,
       BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return "loginView";
-    }
-
     Exception errorinfo =
         (Exception) httpSession.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-    System.out.println();
-    model.addAttribute("errorMsg", errorinfo.getMessage());
+    
+    if(!errorinfo.getMessage().isEmpty()) {
+      model.addAttribute("errorMsg", errorinfo.getMessage());
+    }
     return "loginView";
   }
 
-  /**
-   * loginViewからデータを受信
-   * 
-   * @param model
-   * @param form入力情報
-   * @return ログイン成功時=main.html 失敗時=loginView.html
-   * 
-   */
-  // @GetMapping(UrlConstant.LOGIN)
-  // public String login(Model model, LoginForm form, BindingResult bindingResult) {
-  // if (bindingResult.hasErrors()) {
-  // return "loginView";
-  // }
-  // Optional<UsersEntity> userInfo = usersService.searchUserByEmail(form.getEmail());
-  // Boolean isCrrUserAuth = userInfo.isPresent()
-  // && passwordEncoder.matches(form.getPassword(), userInfo.get().getUserPassword());
-  //
-  //
-  //
-  // if (isCrrUserAuth) {
-  // return "redirect:/";
-  // } else {
-  // // TODO message.propertyのlogin.wrongInputを呼び出す
-  // String erroMsg = AppUtil.getMessage(messagrSource, LoginPageMsgConstant.LOGIN_WRONG_INPUT);
-  // model.addAttribute("errorMsg", erroMsg);
-  // return "loginView";
-  // }
-  // }
 }

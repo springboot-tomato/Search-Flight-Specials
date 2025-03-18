@@ -16,9 +16,9 @@ import lombok.RequiredArgsConstructor;
  * ビジネスロジックを実装する
  * 
  */
-@Service
 // RequiredArgsConstructor：private final宣言したインターフェースに対して
 // newしたものを注入するコンストラクタを実装する
+@Service
 @RequiredArgsConstructor 
 public class UsersService {
   

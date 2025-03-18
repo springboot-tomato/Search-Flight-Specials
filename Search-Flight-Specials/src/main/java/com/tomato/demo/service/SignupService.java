@@ -51,7 +51,6 @@ public class SignupService {
     // 第一引数がコピー元の情報, 第二引数はコピー先の情報
     // 下記のコードはformの情報をUsersEntityクラスにコピーした
     // 情報をリターンする
-    System.out.println(form.getEmail());
     usersEntity.setEmail(form.getEmail());
     usersEntity.setUserPassword(encodePassword);
     usersEntity.setNickname(form.getNickname());
