@@ -30,19 +30,21 @@
 						<div class="col-lg-4">
 							<label for="origin" class="form-label">出発:</label> <input
 								type="text" class="form-control" id="origin" name="origin"
-								autocomplete="off">
+								required>
 							<div id="originSearchResults"
 								class="mt-2 position-absolute w-100 bg-white shadow-sm"
-								style="z-index: 1000;"></div>
+								style="z-index: 1000;">
+							</div>
 						</div>
 
 						<div class="col-lg-4">
 							<label for="destination" class="form-label">到着:</label> <input
 								type="text" class="form-control" id="destination"
-								name="destination" autocomplete="off">
+								name="destination" required>
 							<div id="destinationSearchResults"
 								class="mt-2 position-absolute w-100 bg-white shadow-sm"
-								style="z-index: 1000;"></div>
+								style="z-index: 1000;">
+							</div>
 						</div>
 
 						<div class="col-lg-4">
@@ -53,7 +55,7 @@
 										data-td-target-input="nearest" data-td-target-toggle="nearest">
 										<input type="text" class="form-control" id="departureDate"
 											name="departureDate" data-td-target="#departureDatePicker"
-											autocomplete="off" readonly> <span
+											autocomplete="off" readonly required> <span
 											class="input-group-text"
 											data-td-target="#departureDatePicker"
 											data-td-toggle="datetimepicker"> <i
