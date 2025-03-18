@@ -15,7 +15,7 @@ let destination = "";
 
 //検索ボタンを押下した時の実施されるFunction
 //AsyncでAmadeusAPIからデータを取得する際にFetchをAwait（Loading…機能）
-document.getElementById('flight-search-form').addEventListener('submit', async (e) => {
+document.getElementById('flight-search-form').addEventListener('submit', (e) => {
 	e.preventDefault();
 
 	const searchButton = document.getElementById('searchButton');
@@ -30,6 +30,38 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 
 	const departureDate = departureDateInput.value;
 	const arrivalDate = arrivalDateInput.value;
+
+	if (!origin) {
+		showAlert("出発地を入力してください。", "danger");
+		searchButton.disabled = false;
+		searchButton.classList.remove('d-none');
+		loadingSpinner.classList.add('d-none');
+		return;
+	}
+
+	if (!destination) {
+		showAlert("到着地を入力してください。", "danger");
+		searchButton.disabled = false;
+		searchButton.classList.remove('d-none');
+		loadingSpinner.classList.add('d-none');
+		return;
+	}
+
+	if (!departureDate) {
+		showAlert("出発日を入力してください。", "danger");
+		searchButton.disabled = false;
+		searchButton.classList.remove('d-none');
+		loadingSpinner.classList.add('d-none');
+		return;
+	}
+
+	if (!departureDate && selectOption != '1') {
+		showAlert("帰国日を入力してください。", "danger");
+		searchButton.disabled = false;
+		searchButton.classList.remove('d-none');
+		loadingSpinner.classList.add('d-none');
+		return;
+	}
 
 	const newDepartureDate = departureDate.replace(/\//g, '-'); //'/\//g'は'/'の正規表現
 	const newArrivalDate = arrivalDate.replace(/\//g, '-');
@@ -343,7 +375,7 @@ arrivalDateInput.addEventListener('click', function() {
 
 //片道・往復のラジオボタンを選択した場合にupdateReturnDateVisibilityを実行
 document.querySelectorAll('input[name=ticketOption]').forEach((elem) => {
-	elem.addEventListener("change", function(event) {
+	elem.addEventListener("change", function() {
 		updateReturnDateVisibility();
 	});
 });
@@ -356,13 +388,45 @@ function updateReturnDateVisibility() {
 
 	if (selectOption === '2') {
 		returnDateContainer.classList.remove("d-none");
-		arrivalDateInput.required = true;
 	} else {
 		returnDateContainer.classList.add("d-none");
-		arrivalDateInput.required = false;
 	}
 }
 
 //BackSpaceなどで往復選択で帰国日のContainerが表示されるため、１回実行
 window.onload = updateReturnDateVisibility;
 window.addEventListener('pageshow', updateReturnDateVisibility);
+
+//エラー表示
+function showAlert(message, type) {
+	const alertDiv = document.createElement('div');
+	alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+	alertDiv.setAttribute('role', 'alert');
+	alertDiv.innerHTML = `
+        <span>${message}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+	const form = document.getElementById('flight-search-form');
+	form.parentNode.insertBefore(alertDiv, form);
+
+	//Div初期設定
+	alertDiv.style.opacity = 0;
+	alertDiv.style.transform = 'translateY(-20px)'; // 초기 위치를 약간 위로 설정
+	alertDiv.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+
+	//表示アニメ
+	setTimeout(() => {
+		alertDiv.style.opacity = 1;
+		alertDiv.style.transform = 'translateY(0)';
+	}, 10);
+
+	//削除アニメ
+	setTimeout(() => {
+		alertDiv.style.opacity = 0;
+		alertDiv.style.transform = 'translateY(-20px)';
+		setTimeout(() => {
+			alertDiv.remove();
+		}, 300);
+	}, 3000);
+}

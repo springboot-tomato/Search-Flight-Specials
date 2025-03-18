@@ -9,7 +9,7 @@ window.onload = function() {
 		let cardsHtml = "";
 		//片道・往復で分けて実施
 		if (selectOption == 1) {
-			$.each(flightDetails, function(index, flight) {
+			$.each(flightDetails, function(flight) {
 				cardsHtml += `
                     <div class="col">
                         <div class="card h-100">
@@ -37,7 +37,7 @@ window.onload = function() {
 			});
 		}
 		else {
-			$.each(flightDetails, function(index, flight) {
+			$.each(flightDetails, function(flight) {
 				cardsHtml += `
                     <div class="col">
                         <div class="card h-100">
