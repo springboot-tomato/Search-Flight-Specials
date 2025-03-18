@@ -14,6 +14,12 @@ import com.tomato.demo.util.SearchDataFilter;
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * CSVファイルからIATAデータを処理し検索するサービス
+ * 
+ * このクラスはCSVファイルからIATAデータを読み込み、キャッシュし、キーワードベースの検索機能を提供する。
+ * 
+ */
 @Service
 public class CSVtoIATAService {
 
@@ -28,11 +34,13 @@ public class CSVtoIATAService {
     
     private List<IATAsearch> cachedIATAData;
 
+    // 初期化時にデータを読み込む
     @PostConstruct
     public void initialize() {
         cachedIATAData = iataDataReaderDao.readCSVFileData("IATA_list.csv");
     }
 
+	// キーワードでIATAデータを検索
     public List<Map<String, String>> searchIATAByKeyword(String keyword) {
         return cachedIATAData.stream()
             .filter(iata -> iata.getAirportNmEng().toLowerCase().contains(keyword.toLowerCase()) ||
@@ -45,19 +53,18 @@ public class CSVtoIATAService {
             .collect(Collectors.toList());
     }
 
+    // データ処理のメインロジック
 	public List<IATAsearch> doProcess() {
-		//write a business logic
-		
-		//read Data from CSV file
+        // CSVファイルからデータを読み込む
 		List<IATAsearch> IATAseachf = iataDataReaderDao.readCSVFileData("IATA_list.csv");
 		
-		//Filter Search Data
+        // 検索データをフィルタリング
 		List<IATAsearch> IATAsearchData = SearchDataFilter.filterSearchData(IATAseachf);
 
-		//Store Filter Data in another CSV file
-		String status = csvDataWriterDao.writeCSVFileData(IATAseachf);
+//		// フィルタリングされたデータを別のCSVファイルに保存
+//		String status = csvDataWriterDao.writeCSVFileData(IATAseachf);
 
-		System.out.println("CSV File Writing Status: " + status);
+//		System.out.println("CSV File Writing Status: " + status);
 		
 		return IATAseachf; // IATAseachfを戻り値にする。
 	}

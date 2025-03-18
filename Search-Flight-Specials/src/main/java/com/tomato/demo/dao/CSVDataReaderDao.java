@@ -43,7 +43,7 @@ public abstract class CSVDataReaderDao<T> {
                     
                     T object = parseData(data); // サブクラスの実装を使用して、データを型Tのオブジェクトに解析する。
                     dataList.add(object); // 解析されたオブジェクトをリストに追加する。
-//                    System.out.println("Parsed object: " + object); // デバッグ目的で、解析されたオブジェクトをコンソールに出力する。
+
                 } else {
                     System.out.println("Skipping invalid line: " + readLine); // 無効な行をコンソールに記録する。
                 }
