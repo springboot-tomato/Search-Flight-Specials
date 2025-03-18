@@ -132,7 +132,7 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
 						}
 						localStorage.setItem('selectOption', JSON.stringify(selectOption));
-//						window.location.href = "/search-results-page";
+						window.location.href = "/search-results-page";
 					})
 					.catch(error => {
 						console.error("Error sending data to Spring:", error);

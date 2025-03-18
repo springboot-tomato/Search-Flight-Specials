@@ -30,7 +30,6 @@ public class SearchFlightController {
 			String json = objectMapper.writeValueAsString(results);
 
 			SearchResultRepository flightOffers = searchFlightService.parseFlightOffers(json);
-			System.out.println(flightOffers);
 			return ResponseEntity.ok(flightOffers);
 		} catch (IOException e) {
 			e.printStackTrace();
