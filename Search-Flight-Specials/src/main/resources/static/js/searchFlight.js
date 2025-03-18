@@ -173,8 +173,8 @@ originInput.addEventListener('input', function() {
 		const originValue = this.value;
 		const originSearchResults = document.getElementById('originSearchResults');
 
-		//検索は4バイト超過16バイト以下の場合に実施
-		if (getByteLength(originValue) < 4 || getByteLength(originValue) >= 16) return;
+		//検索は3バイト以上16バイト以下の場合に実施
+		if (getByteLength(originValue) <= 3 || getByteLength(originValue) >= 16) return;
 		//inputがFocusOutする時で実行されるため、Flagで制御
 		if (originSearchResults.textContent.length === 0 && iataOriginFlg) {
 			iataOriginFlg = false;
@@ -232,8 +232,8 @@ destinationInput.addEventListener('input', function() {
 		const destinationValue = this.value;
 		const destinationSearchResults = document.getElementById('destinationSearchResults');
 
-		//検索は4バイト超過16バイト以下の場合に実施
-		if (getByteLength(destinationValue) < 4 || getByteLength(destinationValue) >= 16) return;
+		//検索は3バイト以上16バイト以下の場合に実施
+		if (getByteLength(destinationValue) <= 3 || getByteLength(destinationValue) >= 16) return;
 		//inputがFocusOutする時で実行されるため、Flagで制御
 		if (destinationSearchResults.textContent.length === 0 && iataDestinationFlg) {
 			iataDestinationFlg = false;

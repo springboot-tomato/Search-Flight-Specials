@@ -8,7 +8,7 @@ window.onload = function() {
 		let cardsHtml = "";
 		//片道・往復で分けて実施
 		if (selectOption == 1) {
-			$.each(flightDetails, function(flight) {
+			$.each(flightDetails, function(index, flight) {
 				cardsHtml += `
                     <div class="col">
                         <div class="card h-100">
@@ -36,7 +36,7 @@ window.onload = function() {
 			});
 		}
 		else {
-			$.each(flightDetails, function(flight) {
+			$.each(flightDetails, function(index, flight) {
 				cardsHtml += `
                     <div class="col">
                         <div class="card h-100">
@@ -69,9 +69,6 @@ window.onload = function() {
                 `;
 			});
 		}
-
-
-
 		$("#results").html(cardsHtml);
 	} else {
 		console.error("flightDetails is not available or not an array.");
