@@ -7,6 +7,10 @@ const arrivalDateInput = document.getElementById('arrivalDate');
 const originSearchResults = document.getElementById('originSearchResults');
 const destinationSearchResults = document.getElementById('destinationSearchResults');
 const resultTable = document.getElementById('resultTable');
+let debounceTimer;
+let iataFlg = false;
+let origin = "";
+let destination = "";
 
 //検索ボタンを押下した時の実施されるFunction
 //AsyncでAmadeusAPIからデータを取得する際にFetchをAwait（Loading…機能）
@@ -23,8 +27,6 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 
 	const selectOption = document.querySelector('input[name="ticketOption"]:checked').value;
 
-	const origin = originInput.value;
-	const destination = destinationInput.value;
 	const departureDate = departureDateInput.value;
 	const arrivalDate = arrivalDateInput.value;
 
@@ -114,16 +116,75 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 	}
 });
 
-<<<<<<< Updated upstream
 /*
 	検索：ソウル
 	リターン：ICN、GMP（IATAコード）
 */
-originInput.addEventListener('input', async function() {
-	const originValue = originInput.value;
-	try { console.log("後でｃｓｖから取得し、データを取得") }
-	finally { }
-})
+
+originInput.addEventListener('input', function() {
+
+	clearTimeout(debounceTimer);
+	debounceTimer = setTimeout(() => {
+		const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
+		const originValue = this.value;
+		const originSearchResults = document.getElementById('originSearchResults');
+
+		function getByteLength(str) {
+			return new Blob([str]).size;
+		}
+
+		//検索は4バイト超過16バイト以下の場合に実施
+		if (getByteLength(originValue) < 4 || getByteLength(originValue) >= 16) return;
+		//inputがFocusOutする時で実行されるため、Flagで制御
+		if (originSearchResults.textContent.length === 0 && iataFlg) {
+			iataFlg = false;
+			return;
+		}
+
+		fetch('/api/search-iataCode', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-TOKEN': csrfToken
+			},
+			body: JSON.stringify({ keyword: originValue })
+		})
+			.then(resp => {
+				if (!resp.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return resp.json();
+			})
+			.then(data => {
+				console.log(data)
+				if (data.length != 0) {
+					const dropdownList = document.createElement('ul');
+					dropdownList.className = 'list-group';
+
+					data.forEach(item => {
+						const listItem = document.createElement('li');
+						listItem.className = 'list-group-item list-group-item-action';
+						listItem.textContent = item.label;
+						listItem.addEventListener('click', () => {
+							originInput.value = item.label;
+							origin = item.value;
+							originSearchResults.innerHTML = '';
+						});
+						dropdownList.appendChild(listItem);
+					});
+
+					originSearchResults.innerHTML = '';
+					originSearchResults.appendChild(dropdownList);
+				} else {
+					originSearchResults.innerHTML = '<p class="text-muted">検索結果がありません</p>';
+					iataFlg = true;
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}, 300);
+});
 
 destinationInput.addEventListener('input', async function() {
 	const destinationValue = destinationInput.value;
@@ -131,164 +192,8 @@ destinationInput.addEventListener('input', async function() {
 	finally { }
 })
 
-//本日より前の日、帰国日より後の日はキャレンダーから選択不可
-const departurePicker = new tempusDominus.TempusDominus(document.getElementById('departureDatePicker'), {
-	restrictions: {
-		minDate: new Date(),
-	},
-	display: {
-		components: {
-			calendar: true,
-			date: true,
-			month: true,
-			year: true,
-			decades: false,
-			clock: false
-		},
-		icons: {
-			type: 'icons',
-			date: 'fa fa-solid fa-calendar',
-			previous: 'fa fa-solid fa-chevron-left',
-			next: 'fa fa-solid fa-chevron-right'
-=======
-$(function() {
-	var dateFormat = "yy/mm/dd";
-	$("#departureDate").datepicker({
-		dateFormat: dateFormat,
-		minDate: 0,
-		changeMonth: true,
-		onClose: function(selectedDate) {
-			$("#arrivalDate").datepicker("option", "minDate", selectedDate);
->>>>>>> Stashed changes
-		}
-	},
-	localization: {
-		locale: 'ja'
+document.addEventListener('click', (event) => {
+	if (!originInput.contains(event.target) && !originSearchResults.contains(event.target)) {
+		originSearchResults.innerHTML = '';
 	}
 });
-
-//出発日より前の日はキャレンダーから選択不可
-const returnPicker = new tempusDominus.TempusDominus(document.getElementById('returnDatePicker'), {
-	restrictions: {
-		minDate: new Date(),
-	},
-	display: {
-		components: {
-			calendar: true,
-			date: true,
-			month: true,
-			year: true,
-			decades: false,
-			clock: false
-		},
-		icons: {
-			type: 'icons',
-			date: 'fa fa-solid fa-calendar',
-			previous: 'fa fa-solid fa-chevron-left',
-			next: 'fa fa-solid fa-chevron-right'
-		}
-	},
-	localization: {
-		locale: 'ja'
-	}
-});
-
-departurePicker.subscribe(tempusDominus.Namespace.events.change, (e) => {
-	if (e.date) {
-		const minReturnDate = new Date(e.date);
-		minReturnDate.setHours(0, 0, 0, 0);
-
-		returnPicker.updateOptions({
-			restrictions: {
-				minDate: minReturnDate
-			}
-		});
-	}
-});
-
-returnPicker.subscribe(tempusDominus.Namespace.events.change, (e) => {
-	if (e.date) {
-		const maxDepartureDate = new Date(e.date);
-		maxDepartureDate.setHours(23, 59, 59, 999);
-
-		departurePicker.updateOptions({
-			restrictions: {
-				maxDate: maxDepartureDate
-			}
-		});
-	}
-});
-
-//ラベルを選択した場合にキャレンダーを表示
-departureDateInput.addEventListener('click', function() {
-	departurePicker.toggle();
-});
-
-arrivalDateInput.addEventListener('click', function() {
-	returnPicker.toggle();
-});
-
-//片道・往復のラジオボタンを選択した場合にupdateReturnDateVisibilityを実行
-document.querySelectorAll('input[name=ticketOption]').forEach((elem) => {
-	elem.addEventListener("change", function(event) {
-		updateReturnDateVisibility();
-	});
-});
-
-<<<<<<< Updated upstream
-//片道・往復で表示されるContainerを制御
-function updateReturnDateVisibility() {
-=======
-function setupAutocomplete(inputElement, resultsElement) {
-    inputElement.addEventListener('input', async function() {
-        const query = this.value;
-        if (query.length < 2) {
-            resultsElement.innerHTML = '';
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/iata/search?keyword=${encodeURIComponent(query)}`);
-            const data = await response.json();
-            
-            resultsElement.innerHTML = '';
-
-            data.forEach(item => {
-                const div = document.createElement('div');
-                div.textContent = item.label;
-                div.addEventListener('click', function() {
-                    inputElement.value = item.value;
-                    resultsElement.innerHTML = '';
-                });
-                resultsElement.appendChild(div);
-            });
-        } catch (error) {
-            console.error('Error fetching IATA data:', error);
-        }
-    });
-}
-
-// 出発地入力フィールド自動完成設定
-setupAutocomplete(originInput, originSearchResults);
-
-// 到着地入力フィールド自動完成設定
-setupAutocomplete(destinationInput, destinationSearchResults);
-
-function toggleArrivalDate() {
->>>>>>> Stashed changes
-
-	const selectOption = document.querySelector('input[name="ticketOption"]:checked').value;
-	const returnDateContainer = document.getElementById("returnDateContainer");
-
-	if (selectOption === '2') {
-		returnDateContainer.classList.remove("d-none");
-		arrivalDateInput.required = true;
-	} else {
-		returnDateContainer.classList.add("d-none");
-		arrivalDateInput.required = false;
-	}
-}
-
-//BackSpaceなどで往復選択で帰国日のContainerが表示されるため、１回実行
-window.onload = updateReturnDateVisibility;
-window.addEventListener('pageshow', updateReturnDateVisibility);

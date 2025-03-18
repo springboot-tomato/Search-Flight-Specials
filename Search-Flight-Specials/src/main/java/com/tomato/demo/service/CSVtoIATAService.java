@@ -34,11 +34,12 @@ public class CSVtoIATAService {
 	public void initialize() {
 		iataReader.readCSVFileData(fileName);
 		cachedIATAData = iataReader.getDataList();
+		System.out.println(cachedIATAData);
 	}
 
 	public List<Map<String, String>> searchIATAByKeyword(String keyword) {
 		return cachedIATAData.stream()
-				.filter(iata -> iata.getAirportNmEng().toLowerCase().contains(keyword.toLowerCase())
+				.filter(iata -> iata.getAirportNmEng().split("Airport")[0].toLowerCase().contains(keyword.toLowerCase())
 						|| iata.getAirportNmKr().contains(keyword)
 						|| iata.getCityNmEng().toLowerCase().contains(keyword.toLowerCase()))
 				.map(iata -> Map.of("label",

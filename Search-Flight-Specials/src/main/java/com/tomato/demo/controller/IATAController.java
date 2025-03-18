@@ -1,20 +1,25 @@
 package com.tomato.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import com.tomato.demo.constant.urlConstant.UrlConstant;
 import com.tomato.demo.service.CSVtoIATAService;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/iata")
+@RequestMapping(UrlConstant.API)
 public class IATAController {
 
-    @Autowired
-    private CSVtoIATAService csvtoIATAService;
+	private final CSVtoIATAService csvtoIATAService;
 
-    @GetMapping("/search")
-    public List<Map<String, String>> searchIATAByKeyword(@RequestParam String keyword) {
-        return csvtoIATAService.searchIATAByKeyword(keyword);
-    }
+	public IATAController(CSVtoIATAService csvtoIATAService) {
+		this.csvtoIATAService = csvtoIATAService;
+	}
+
+	@PostMapping(UrlConstant.SEARCHIATACODE)
+	public List<Map<String, String>> searchIATAByKeyword(@RequestBody Map<String, String> request) {
+		String keyword = request.get("keyword");
+		return csvtoIATAService.searchIATAByKeyword(keyword);
+	}
 }
