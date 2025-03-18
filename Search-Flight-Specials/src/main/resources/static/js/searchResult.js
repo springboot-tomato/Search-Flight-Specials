@@ -5,7 +5,6 @@ window.onload = function() {
 	const selectOption = JSON.parse(localStorage.getItem('selectOption'))
 	//Jsonデータを取得した場合にカードに航空券の情報を入れる
 	if (flightDetails && Array.isArray(flightDetails)) {
-		console.log(flightDetails);
 		let cardsHtml = "";
 		//片道・往復で分けて実施
 		if (selectOption == 1) {
@@ -70,9 +69,6 @@ window.onload = function() {
                 `;
 			});
 		}
-
-
-
 		$("#results").html(cardsHtml);
 	} else {
 		console.error("flightDetails is not available or not an array.");
