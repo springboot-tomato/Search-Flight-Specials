@@ -34,7 +34,6 @@ public class CSVtoIATAService {
 	public void initialize() {
 		iataReader.readCSVFileData(fileName);
 		cachedIATAData = iataReader.getDataList();
-		System.out.println(cachedIATAData);
 	}
 
 	public List<Map<String, String>> searchIATAByKeyword(String keyword) {
