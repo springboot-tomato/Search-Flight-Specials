@@ -2,14 +2,12 @@ package com.tomato.demo.controller;
 
 import java.io.IOException;
 import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tomato.demo.constant.urlConstant.UrlConstant;
 import com.tomato.demo.repository.SearchResultRepository;
@@ -32,7 +30,7 @@ public class SearchFlightController {
 			String json = objectMapper.writeValueAsString(results);
 
 			SearchResultRepository flightOffers = searchFlightService.parseFlightOffers(json);
-
+			System.out.println(flightOffers);
 			return ResponseEntity.ok(flightOffers);
 		} catch (IOException e) {
 			e.printStackTrace();

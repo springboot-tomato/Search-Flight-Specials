@@ -66,6 +66,7 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 				})
 					.then(resp => resp.json())
 					.then(data => {
+						console.log(data)
 						if (selectOption === '1') {
 							//直行だけデータとして取得
 							const flights = data.flightDetails.filter(flight => flight.direct === 1);
@@ -96,7 +97,7 @@ document.getElementById('flight-search-form').addEventListener('submit', async (
 							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
 						}
 						localStorage.setItem('selectOption', JSON.stringify(selectOption));
-						window.location.href = "/search-results-page";
+//						window.location.href = "/search-results-page";
 					})
 					.catch(error => {
 						console.error("Error sending data to Spring:", error);

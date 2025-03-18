@@ -9,12 +9,16 @@
 <body class="bg-secondary-subtle">
 	<div class="container py-5">
 		<th:block th:replace="~{fragments/layout :: header(loginPage=true)}"></th:block>
-
+	
 		<div class="row justify-content-center">
 			<div class="col-md-6">
 				<div class="card shadow-sm">
 					<div class="card-body">
 						<h2 class="card-title text-center mb-4">ログイン</h2>
+						<div th:if="${param.error}" th:text="${param.error.message}">
+							Invalid username and password.</div>
+						<div th:if="${message}" class="alert alert-info" role="alert"
+							th:text="${message}"></div>
 						<div th:if="${errorMsg}" class="alert alert-danger" role="alert"
 							th:text="${errorMsg}"></div>
 						<form action="#" th:action="@{/login}" method="post"
@@ -22,14 +26,14 @@
 							<div class="mb-3">
 								<label for="email" class="form-label">メールアドレス</label> <input
 									type="email" class="form-control" id="email"
-									th:field="*{email}" required>
+									th:field="*{email}">
 								<div class="form-text text-danger"
 									th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 							</div>
 							<div class="mb-3">
 								<label for="password" class="form-label">パスワード</label> <input
 									type="password" class="form-control" id="password"
-									th:field="*{password}" required>
+									th:field="*{password}">
 								<div class="form-text text-danger"
 									th:if="${#fields.hasErrors('password')}"
 									th:errors="*{password}"></div>
@@ -51,5 +55,8 @@
 
 	</div>
 </body>
+<script>
+	console.log("loginView");
+</script>
 
 </html>
