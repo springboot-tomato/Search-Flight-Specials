@@ -90,7 +90,6 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 			})
 			.then(resp => resp.json())
 			.then((results) => {
-				console.log("SpringにRequestする前:", results);
 				fetch('/api/search-results', {
 					method: 'POST',
 					headers: {
@@ -101,10 +100,16 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 				})
 					.then(resp => resp.json())
 					.then(data => {
-						console.log(data)
 						if (selectOption === '1') {
 							//直行だけデータとして取得
 							const flights = data.flightDetails.filter(flight => flight.direct === 1);
+							if (flights.length === 0) {
+								showAlert("指定した航空券の空港便がありません。", "danger");
+								searchButton.disabled = false;
+								searchButton.classList.remove('d-none');
+								loadingSpinner.classList.add('d-none');
+								return;
+							}
 							localStorage.setItem('flightDetails', JSON.stringify(flights)); // dataデータをJSONに変換してsearchResultに転送
 						}
 						else {
@@ -128,6 +133,13 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 									outbound: outboundFlights[i],
 									inbound: inboundFlights[j]
 								})
+							}
+							if (roundTrips.length === 0) {
+								showAlert("指定した航空券の空港便がありません。", "danger");
+								searchButton.disabled = false;
+								searchButton.classList.remove('d-none');
+								loadingSpinner.classList.add('d-none');
+								return;
 							}
 							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
 						}
