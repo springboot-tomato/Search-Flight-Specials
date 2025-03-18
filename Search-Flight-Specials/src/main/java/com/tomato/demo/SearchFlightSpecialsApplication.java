@@ -5,13 +5,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.tomato.demo.service.CSVtoIATAService;
+import com.tomato.demo.service.CSVProcessingService;
 
 @SpringBootApplication
 public class SearchFlightSpecialsApplication implements CommandLineRunner {
 
 	@Autowired
-    private CSVtoIATAService searchService;
+    private CSVProcessingService csvProcessingService;
 
     public static void main(String[] args) {
         SpringApplication.run(SearchFlightSpecialsApplication.class, args);
@@ -19,7 +19,6 @@ public class SearchFlightSpecialsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        searchService.doProcess();
+        csvProcessingService.processAllCSVFiles(); // アプリケーション起動時にすべてのCSVファイル処理
     }
 }
-
