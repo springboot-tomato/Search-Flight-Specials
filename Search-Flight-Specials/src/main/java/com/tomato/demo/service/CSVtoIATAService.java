@@ -5,10 +5,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.tomato.demo.dao.IATADataReaderDao;
 import com.tomato.demo.dao.CSVDataWriterDao;
+import com.tomato.demo.dao.IATADataReaderDao;
 import com.tomato.demo.model.IATAsearch;
 import com.tomato.demo.util.SearchDataFilter;
 
@@ -21,6 +26,7 @@ import jakarta.annotation.PostConstruct;
  * 
  */
 @Service
+@RestController
 public class CSVtoIATAService {
 
 	@Autowired
@@ -68,5 +74,16 @@ public class CSVtoIATAService {
 		
 		return IATAseachf; // IATAseachfを戻り値にする。
 	}
-
+    
+    // IATAデータを検索するAPIエンドポイントマッピング
+    @GetMapping("/api/search-iata")
+    public ResponseEntity<List<Map<String, String>>> searchIATA(
+            @RequestParam("keyword") String keyword) {
+        List<Map<String, String>> results = searchIATAByKeyword(keyword); // キーワードからIATAデータを検索
+        if (results == null || results.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 検索結果がなければ404 Not Foundを返却
+        }
+        return new ResponseEntity<>(results, HttpStatus.OK); // 検索結果をJSON形式で返却
+    }
+    
 }

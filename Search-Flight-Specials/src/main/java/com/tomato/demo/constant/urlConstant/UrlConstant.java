@@ -22,7 +22,7 @@ public class UrlConstant {
   /**　結果Pageー */
   public static final String SEARCHRESULTSPAGE = "/search-results-page";
   /**　認証不要画面 */
-  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, API+GETAMADEUSKEY, API+SEARCHRESULTS, SEARCHRESULTSPAGE, "/webjars/**", "/js/**", "/css/**", "/api/iata", "/search"};
+  public static final String[] NO_AUTHENCATION = {LOGIN, SIGNUP, MAIN, API+GETAMADEUSKEY, API+SEARCHRESULTS, SEARCHRESULTSPAGE, "/webjars/**", "/js/**", "/css/**", "/api/iata/**", "/search/**", "/api/search-iata/**"};
 
   public static final String MYPAGE = "/mypage";
   
