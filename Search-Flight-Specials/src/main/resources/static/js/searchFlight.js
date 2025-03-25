@@ -14,7 +14,6 @@ let origin = "";
 let destination = "";
 
 //検索ボタンを押下した時の実施されるFunction
-//AsyncでAmadeusAPIからデータを取得する際にFetchをAwait（Loading…機能）
 document.getElementById('flight-search-form').addEventListener('submit', (e) => {
 	e.preventDefault();
 
@@ -100,48 +99,106 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 				})
 					.then(resp => resp.json())
 					.then(data => {
-						if (selectOption === '1') {
-							//直行だけデータとして取得
-							const flights = data.flightDetails.filter(flight => flight.direct === 1);
-							if (flights.length === 0) {
-								showAlert("指定した航空券の空港便がありません。", "danger");
-								searchButton.disabled = false;
-								searchButton.classList.remove('d-none');
-								loadingSpinner.classList.add('d-none');
-								return;
+						// 片道航空便処理
+						if (selectOption === '1') {	//検索条件が片道の場合、検索結果処理
+							// 直行便
+							const directFlights = data.flightDetails.filter(flight => flight.direct === 1);
+							// 経由便
+							const transitFlights = data.flightDetails.filter(flight => flight.direct > 1);
+							
+							// fee属性確認及び警告メッセージ追加
+							directFlights.forEach(flight => {
+							  if (!flight.hasOwnProperty('fee')) {
+							    console.warn("直行便に料金情報がありません:", flight);
+							  }
+							});
+							transitFlights.forEach(flight => {
+							  if (!flight.hasOwnProperty('fee')) {
+							    console.warn("経由便に料金情報がありません:", flight);
+							  }
+							});
+							
+							// 検索結果がない場合、alert表示
+							if (directFlights.length === 0 || transitFlights.length === 0) {
+								console.log(directFlights.length)
+								console.log(transitFlights.length)
+							    showAlert("指定した航空券の空港便がありません。", "danger");
+							    searchButton.disabled = false;
+							    searchButton.classList.remove('d-none');
+							    loadingSpinner.classList.add('d-none');
+							    return;
 							}
-							localStorage.setItem('flightDetails', JSON.stringify(flights)); // dataデータをJSONに変換してsearchResultに転送
+							
+							// 検索結果データをJSONに変換してlocal Storageに保存
+							localStorage.setItem('flightDetails', JSON.stringify({ direct: directFlights, transit: transitFlights }));
 						}
-						else {
-							//直行だけデータとして取得、
-							const outboundFlights = data.flightDetails.filter(flight => flight.departureTerminal === origin && flight.arrivalTerminal === destination && flight.direct === 1);
-							const inboundFlights = data.flightDetails.filter(flight => flight.arrivalTerminal === origin && flight.departureTerminal === destination && flight.direct === 1);
-							let roundTrips = [];
-							//行きは直行帰りは乗継などで航空券の情報が間違うかもしれないので制御
-							for (let i = 0; i < outboundFlights.length; i++) {
+						// 検索条件が往復の場合、検索結果処理
+						else {	
+							// 直行便
+							const outboundDirectFlights = data.flightDetails.filter(flight => flight.departureTerminal === origin && flight.arrivalTerminal === destination && flight.direct === 1);
+							const inboundDirectFlights = data.flightDetails.filter(flight => flight.arrivalTerminal === origin && flight.departureTerminal === destination && flight.direct === 1);
+
+							// 経由便
+							const outboundTransitFlights = data.flightDetails.filter(flight => flight.departureTerminal === origin && flight.arrivalTerminal === destination && flight.direct > 1);
+							const inboundTransitFlights = data.flightDetails.filter(flight => flight.arrivalTerminal === origin && flight.departureTerminal === destination && flight.direct > 1);
+
+							// fee属性確認及び警告メッセージ追加
+							[outboundDirectFlights, inboundDirectFlights, outboundTransitFlights, inboundTransitFlights].forEach(flightList => {
+							  flightList.forEach(flight => {
+							    if (!flight.hasOwnProperty('fee')) {
+							      console.warn("航空便に料金情報がありません:", flight);
+							    }
+							  });
+							});
+							
+							let roundTripsDirect = [];
+							let roundTripsTransit = [];
+							// 料金が一致する直行便を探す。
+							for (let i = 0; i < outboundDirectFlights.length; i++) {
 								let j = i;
-								while (outboundFlights[i].fee != inboundFlights[j].fee) {
+								while (outboundDirectFlights[i].fee != inboundDirectFlights[j].fee) {
 									j++;
-									if (inboundFlights.length <= j) {
+									if (inboundDirectFlights.length <= j) {
 										break;
 									}
 								}
-								if (inboundFlights.length <= j) {
+								if (inboundDirectFlights.length <= j) {
 									break;
 								}
-								roundTrips.push({
-									outbound: outboundFlights[i],
-									inbound: inboundFlights[j]
+								roundTripsDirect.push({
+									outbound: outboundDirectFlights[i],
+									inbound: inboundDirectFlights[j]
 								})
 							}
-							if (roundTrips.length === 0) {
+							// 料金が一致する経由便を探す。
+							for (let i = 0; i < outboundTransitFlights.length; i++) {
+								let j = i;
+								while (outboundTransitFlights[i].fee != inboundTransitFlights[j].fee) {
+									j++;
+									if (inboundTransitFlights.length <= j) {
+										break;
+									}
+								}
+								if (inboundTransitFlights.length <= j) {
+									break;
+								}
+								roundTripsTransit.push({
+									outbound: outboundTransitFlights[i],
+									inbound: inboundTransitFlights[j]
+								})
+							}
+							// 検索結果がない場合、alert表示
+							if (roundTripsDirect.length === 0 && roundTripsTransit.length === 0) {
 								showAlert("指定した航空券の空港便がありません。", "danger");
 								searchButton.disabled = false;
 								searchButton.classList.remove('d-none');
 								loadingSpinner.classList.add('d-none');
+								console.log(oundTripsDirect.length);
+								console.log(roundTripsTransit.length);
 								return;
 							}
-							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
+							// 検索結果データをJSONに変換してlocal Storageに保存
+							localStorage.setItem('flightDetails', JSON.stringify({ direct: roundTripsDirect, transit: roundTripsTransit }));
 						}
 						localStorage.setItem('selectOption', JSON.stringify(selectOption));
 						window.location.href = "/search-results-page";
@@ -167,10 +224,13 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 */
 
 originInput.addEventListener('input', function() {
+	
+	// デバウンス処理：入力が一定時間停止するまで待機
 	clearTimeout(debounceTimer);
 	debounceTimer = setTimeout(() => {
 		const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
 		const originValue = this.value;
+		// 検索結果を表示するHTML要素インポート
 		const originSearchResults = document.getElementById('originSearchResults');
 
 		//検索は3バイト以上16バイト以下の場合に実施
