@@ -92,4 +92,4 @@ window.onload = function() {
 	    }
 
 	    $("#results").html(cardsHtml); // 結果表示
-	}
+	

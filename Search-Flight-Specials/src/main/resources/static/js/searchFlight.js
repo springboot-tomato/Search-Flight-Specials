@@ -119,7 +119,7 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 							});
 							
 							// 検索結果がない場合、alert表示
-							if (directFlights.length === 0 || transitFlights.length === 0) {
+							if (directFlights.length === 0 && transitFlights.length === 0) {
 								console.log(directFlights.length)
 								console.log(transitFlights.length)
 							    showAlert("指定した航空券の空港便がありません。", "danger");
