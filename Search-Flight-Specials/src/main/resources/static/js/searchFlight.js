@@ -66,8 +66,6 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 	const newDepartureDate = departureDate.replace(/\//g, '-'); //'/\//g'は'/'の正規表現
 	const newArrivalDate = arrivalDate.replace(/\//g, '-');
 
-	const csrfToken = document.querySelector("[name='_csrf']").getAttribute("content");
-
 	var fetchUrl = '';
 
 	/*selectOption
@@ -90,68 +88,16 @@ document.getElementById('flight-search-form').addEventListener('submit', (e) => 
 			})
 			.then(resp => resp.json())
 			.then((results) => {
-				fetch('/api/search-results', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-CSRF-TOKEN': csrfToken
-					},
-					body: JSON.stringify(results) // resultsデータをJSONに変換してSpringに転送
-				})
-					.then(resp => resp.json())
-					.then(data => {
-						if (selectOption === '1') {
-							//直行だけデータとして取得
-							const flights = data.flightDetails.filter(flight => flight.direct === 1);
-							if (flights.length === 0) {
-								showAlert("指定した航空券の空港便がありません。", "danger");
-								searchButton.disabled = false;
-								searchButton.classList.remove('d-none');
-								loadingSpinner.classList.add('d-none');
-								return;
-							}
-							localStorage.setItem('flightDetails', JSON.stringify(flights)); // dataデータをJSONに変換してsearchResultに転送
-						}
-						else {
-							//直行だけデータとして取得、
-							const outboundFlights = data.flightDetails.filter(flight => flight.departureTerminal === origin && flight.arrivalTerminal === destination && flight.direct === 1);
-							const inboundFlights = data.flightDetails.filter(flight => flight.arrivalTerminal === origin && flight.departureTerminal === destination && flight.direct === 1);
-							let roundTrips = [];
-							//行きは直行帰りは乗継などで航空券の情報が間違うかもしれないので制御
-							for (let i = 0; i < outboundFlights.length; i++) {
-								let j = i;
-								while (outboundFlights[i].fee != inboundFlights[j].fee) {
-									j++;
-									if (inboundFlights.length <= j) {
-										break;
-									}
-								}
-								if (inboundFlights.length <= j) {
-									break;
-								}
-								roundTrips.push({
-									outbound: outboundFlights[i],
-									inbound: inboundFlights[j]
-								})
-							}
-							if (roundTrips.length === 0) {
-								showAlert("指定した航空券の空港便がありません。", "danger");
-								searchButton.disabled = false;
-								searchButton.classList.remove('d-none');
-								loadingSpinner.classList.add('d-none');
-								return;
-							}
-							localStorage.setItem('flightDetails', JSON.stringify(roundTrips));
-						}
-						localStorage.setItem('selectOption', JSON.stringify(selectOption));
-						window.location.href = "/search-results-page";
-					})
-					.catch(error => {
-						console.error("Error sending data to Spring:", error);
-						searchButton.disabled = false;
-						searchButton.classList.remove('d-none');
-						loadingSpinner.classList.add('d-none');
-					});
+				if (results.data.length == 0) {
+					showAlert("指定した航空券の空港便がありません。", "danger");
+					searchButton.disabled = false;
+					searchButton.classList.remove('d-none');
+					loadingSpinner.classList.add('d-none');
+					return;
+				}
+				localStorage.setItem('flightDetails', JSON.stringify(results));
+				localStorage.setItem('selectOption', JSON.stringify(selectOption));
+				window.location.href = "/search-results-page";
 			})
 	} catch (error) {
 		console.error('Error:', error);
